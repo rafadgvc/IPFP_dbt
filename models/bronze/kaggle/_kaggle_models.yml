@@ -1,0 +1,38 @@
+version: 2
+
+
+models: 
+  - name: history
+    columns: 
+      - name: uri
+        tests: 
+          - not_null
+          - unique
+      - name: ts 
+        tests:
+          - not_null
+      - name: platform
+        tests: 
+          - not_null
+      - name: ms_played
+        tests: 
+          - not_null
+      - name: track_name
+        tests:
+          - not_null
+      - name: artist_name
+        tests:
+          - not_null
+      - name: album_name
+        tests:
+          - not_null
+      - name: reason_start
+        tests:
+          - not_null
+      - name: reason_end
+        tests:
+          - not_null
+      - name: shuffle
+        tests: 
+          - not_null
+            
