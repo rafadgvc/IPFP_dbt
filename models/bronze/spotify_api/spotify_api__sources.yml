@@ -1,0 +1,92 @@
+version: 2
+
+sources:
+
+  - name: spotify_api
+    schema: spotify_api
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_ICAROSPATH_DB"
+
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    
+
+    freshness:
+      warn_after: {count: 24, period: day}
+      error_after: {count: 48, period: day}
+
+    tables:
+      - name: history
+        description: "History of the second user's listening habits"
+        columns:
+          - name: spotify_track_uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+          - name: ts
+            data_type: timestamp_ntz
+            description: "Date and time in which the listening was done"
+          - name: platform
+            data_type: varchar
+            description: "Platform in which the listening took place"
+          - name: ms_played
+            data_type: varchar
+            description: "Miliseconds that the listening lasted"
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+          - name: artist_name
+            data_type: varchar
+            description: "Name of the main artist that made the song"
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album that the song belongs to"
+          - name: reason_start
+            data_type: varchar
+            description: "Why the track started playing"
+          - name: reason_end
+            data_type: varchar
+            description: "Why the track stopped playing"
+          - name: shuffle
+            data_type: boolean
+            description: "Wether, in the beginning of the listening, shuffle was activated"
+          - name: skipped
+            data_type: boolean
+            description: "Wether the track was skipped"
+      
+      - name: history2
+        description: "History of the artificial user's listening habits"
+        columns:
+          - name: spotify_track_uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+          - name: ts
+            data_type: timestamp_ntz
+            description: "Date and time in which the listening was done"
+          - name: platform
+            data_type: varchar
+            description: "Platform in which the listening took place"
+          - name: ms_played
+            data_type: varchar
+            description: "Miliseconds that the listening lasted"
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+          - name: artist_name
+            data_type: varchar
+            description: "Name of the main artist that made the song"
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album that the song belongs to"
+          - name: reason_start
+            data_type: varchar
+            description: "Why the track started playing"
+          - name: reason_end
+            data_type: varchar
+            description: "Why the track stopped playing"
+          - name: shuffle
+            data_type: boolean
+            description: "Wether, in the beginning of the listening, shuffle was activated"
+          - name: skipped
+            data_type: boolean
+            description: "Wether the track was skipped"

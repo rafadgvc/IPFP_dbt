@@ -1,11 +1,8 @@
-{{ config(
-    materialized='incremental',
-    incremental_strategy='microbatch',
-    event_time='date_load',
-    begin='2024-10-25',
-    batch_size='day',
-    lookback=2
-) }}
+{{
+  config(
+    materialized='view'
+  )
+}}
 
 WITH src_tracks_data AS (
     SELECT * 
