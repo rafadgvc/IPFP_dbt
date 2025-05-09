@@ -42,22 +42,23 @@ src_kaggle_tracks AS (
 
 filtered_kt AS (
     SELECT
-          TRIM(BOTH '''' FROM SPLIT_PART(TRIM(BOTH '[]' FROM artists))) AS artist_name
+          
+           regexp_substr(artists, '''([^'']+)''', 1, 1, 'e', 1)   AS artist_name
     FROM src_kaggle_tracks
     )
 
-SELECT    artist_name 
-        , distinct md5(artist_name) AS artist_id 
+SELECT    distinct md5(artist_name) AS artist_id 
+        , artist_name 
 FROM filtered_kh
 UNION 
-SELECT    artist_name 
-        , distinct md5(artist_name) AS artist_id 
+SELECT    distinct md5(artist_name) AS artist_id 
+        , artist_name 
 FROM filtered_sah
 UNION 
-SELECT    artist_name 
-        , distinct md5(artist_name) AS artist_id 
+SELECT    distinct md5(artist_name) AS artist_id 
+        , artist_name 
 FROM filtered_sah2
 UNION 
-SELECT    artist_name 
-        , distinct md5(artist_name) AS artist_id 
+SELECT    distinct md5(artist_name) AS artist_id 
+        , artist_name  
 FROM filtered_kt

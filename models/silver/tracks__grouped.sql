@@ -25,7 +25,7 @@ filtered_sah AS (
     SELECT
           uri
         , track_name
-    FROM src_kaggle_history
+    FROM src_spotify_api_history
     ),
 
 src_spotify_api_history2 AS (
@@ -37,7 +37,7 @@ filtered_sah2 AS (
     SELECT
           uri
         , track_name
-    FROM src_kaggle_history2
+    FROM src_spotify_api_history2
     ),
 
 src_kaggle_tracks AS (
@@ -49,7 +49,7 @@ filtered_kt AS (
     SELECT
           id AS uri
         , name AS track_name
-    FROM src_kaggle_history
+    FROM src_kaggle_tracks
     )
 
 SELECT * FROM filtered_kh

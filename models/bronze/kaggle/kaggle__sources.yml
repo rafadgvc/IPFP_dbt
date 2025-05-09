@@ -13,8 +13,8 @@ sources:
     
 
     freshness:
-      warn_after: {count: 24, period: day}
-      error_after: {count: 48, period: day}
+      warn_after: {count: 10, period: day}
+      error_after: {count: 20, period: day}
 
     tables:
       - name: history

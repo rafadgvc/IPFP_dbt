@@ -27,7 +27,7 @@ renamed_casted AS (
         , mode
         , name
         , popularity
-        , release_date
+        , realease_date AS release_date
         , speechiness
         , tempo
     FROM src_tracks_data

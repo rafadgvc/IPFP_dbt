@@ -9,21 +9,27 @@ WITH src_kaggle_history AS (
     FROM {{ ref("bronze_kaggle__history") }}
     ),
 
+src_spotify_api_users AS (
+    SELECT * 
+    FROM {{ ref("bronze_spotify_api__users") }}
+    ),
+
 filtered_kh AS (
     SELECT
-          spotify_track_uri AS uri
-        , ts
-        , platform
-        , ms_played
-        , track_name
-        , artist_name
-        , album_name
-        , reason_start
-        , reason_end
-        , shuffle
-        , skipped
-    FROM src_kaggle_history
-    WHERE src_kaggle_history.ms_played > 5000
+          kh.uri
+        , kh.ts
+        , kh.platform
+        , kh.ms_played
+        , kh.track_name
+        , kh.artist_name
+        , kh.album_name
+        , kh.reason_start
+        , kh.reason_end
+        , kh.shuffle
+        , kh.skipped
+        , (SELECT hashed_id FROM src_spotify_api_users WHERE original_id = '95buwo3thj5dg5s12r9trop9c') AS hashed_user_id
+    FROM src_kaggle_history AS kh
+    WHERE kh.ms_played > 5000
     ),
 
 src_spotify_api_history AS (
@@ -33,19 +39,20 @@ src_spotify_api_history AS (
 
 filtered_sah AS (
     SELECT
-          uri
-        , ts
-        , platform
-        , ms_played
-        , track_name
-        , artist_name
-        , album_name
-        , reason_start
-        , reason_end
-        , shuffle
-        , skipped
-    FROM src_spotify_api_history
-    WHERE src_spotify_api_history.ms_played > 5000
+          sah.uri
+        , sah.ts
+        , sah.platform
+        , sah.ms_played
+        , sah.track_name
+        , sah.artist_name
+        , sah.album_name
+        , sah.reason_start
+        , sah.reason_end
+        , sah.shuffle
+        , sah.skipped
+        , (SELECT hashed_id FROM src_spotify_api_users WHERE original_id = '62wauy6fpg5dg5s86y9bpof1r') AS hashed_user_id
+    FROM src_spotify_api_history AS sah
+    WHERE sah.ms_played > 5000
     ),
 
 src_spotify_api_history2 AS (
@@ -53,21 +60,26 @@ src_spotify_api_history2 AS (
     FROM {{ ref("bronze_spotify_api__history2") }}
     ),
 
-filtered_sah AS (
+filtered_sah2 AS (
     SELECT
-          uri
-        , ts
-        , platform
-        , ms_played
-        , track_name
-        , artist_name
-        , album_name
-        , reason_start
-        , reason_end
-        , shuffle
-        , skipped
-    FROM src_spotify_api_history2
-    WHERE src_spotify_api_history2.ms_played > 5000
-    ),
+          sah.uri
+        , sah.ts
+        , sah.platform
+        , sah.ms_played
+        , sah.track_name
+        , sah.artist_name
+        , sah.album_name
+        , sah.reason_start
+        , sah.reason_end
+        , sah.shuffle
+        , sah.skipped
+        , (SELECT hashed_id FROM src_spotify_api_users WHERE original_id = '14ysrj7atn9yn9s57h8cuie3w') AS hashed_user_id
+    FROM src_spotify_api_history2 AS sah
+    WHERE sah.ms_played > 5000
+    )
 
-SELECT * FROM renamed_casted
+SELECT * FROM filtered_kh
+UNION
+SELECT * FROM filtered_sah
+UNION
+SELECT * FROM filtered_sah2

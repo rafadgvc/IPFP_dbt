@@ -2,9 +2,9 @@ version: 2
 
 sources:
 
-  - name: spotify_api
-    schema: spotify_api
-    database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_ICAROSPATH_DB"
+  - name: silver
+    schema: silver
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_ICAROSPATH_DB"
 
     quoting:
       database: false
@@ -17,10 +17,10 @@ sources:
       error_after: {count: 20, period: day}
 
     tables:
-      - name: history
-        description: "History of the second user's listening habits"
+      - name: listenings
+        description: "Listening habits of the users"
         columns:
-          - name: spotify_track_uri
+          - name: uri
             data_type: varchar
             description: "Track URI to identify it in Spotify"
           - name: ts
@@ -53,40 +53,46 @@ sources:
           - name: skipped
             data_type: boolean
             description: "Wether the track was skipped"
+          - name: hashed_user_id
+            data_type: varchar
+            description: "Hashed id of the user that listened to the track"
+      - name: tracks
+        description: "Data corresponding to tracks"
+        columns: 
+          - name: uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+
+      - name: albums
+        description: "Data corresponding to albums, EPs and singles"
+        columns: 
+          - name: album_id
+            data_type: varchar
+            description: "Identifier for an album"
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album"
       
-      - name: history2
-        description: "History of the artificial user's listening habits"
-        columns:
-          - name: spotify_track_uri
+      - name: artists
+        description: "Data corresponding to artists"
+        columns: 
+          - name: artist_id
             data_type: varchar
-            description: "Track URI to identify it in Spotify"
-          - name: ts
-            data_type: timestamp_ntz
-            description: "Date and time in which the listening was done"
-          - name: platform
-            data_type: varchar
-            description: "Platform in which the listening took place"
-          - name: ms_played
-            data_type: varchar
-            description: "Miliseconds that the listening lasted"
-          - name: track_name
-            data_type: varchar
-            description: "Name of the track"
+            description: "Identifier for an artist"
           - name: artist_name
             data_type: varchar
-            description: "Name of the main artist that made the song"
-          - name: album_name
-            data_type: varchar
-            description: "Name of the album that the song belongs to"
-          - name: reason_start
-            data_type: varchar
-            description: "Why the track started playing"
-          - name: reason_end
-            data_type: varchar
-            description: "Why the track stopped playing"
-          - name: shuffle
-            data_type: boolean
-            description: "Wether, in the beginning of the listening, shuffle was activated"
-          - name: skipped
-            data_type: boolean
-            description: "Wether the track was skipped"
+            description: "Name of the artist"
+      
+      - name: users
+        description: "Data corresponding to users"
+        columns: 
+            - name: original_id
+              data_type: varchar
+              description: "Identifier for a user"
+            - name: hashed_id
+              data_type: varchar
+              description: "Hashed identifier for a user"
+            

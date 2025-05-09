@@ -2,7 +2,7 @@ version: 2
 
 
 models: 
-  - name: history1
+  - name: listenings
     columns: 
       - name: uri
         tests: 
@@ -34,52 +34,46 @@ models:
       - name: shuffle
         tests: 
           - not_null
+      - name: hashed_user_id
+        tests:
+          - not_null
 
-  - name: history2
-    columns: 
+  - name: tracks
+    columns:
       - name: uri
-        tests: 
-          - not_null
-      - name: ts 
         tests:
           - not_null
-      - name: platform
-        tests: 
-          - not_null
-      - name: ms_played
-        tests: 
-          - not_null
-      - name: track_name
+          - unique
+      - name: name
         tests:
           - not_null
-      - name: artist_name
+  
+  - name: albums
+    columns:
+      - name: album_id
         tests:
           - not_null
+          - unique
       - name: album_name
         tests:
           - not_null
-      - name: reason_start
+  
+  - name: artists
+    columns:
+      - name: artist_id
         tests:
           - not_null
-      - name: reason_end
+          - unique
+      - name: artist_name
         tests:
           - not_null
-      - name: shuffle
-        tests: 
-          - not_null
-
+  
   - name: users
     columns: 
       - name: original_id
-        tests:
-          - not_null
+        tests: 
+          - not_null 
+          - unique 
       - name: hashed_id
-        tests:
-          - not_null
-          
-          
-      
-      
-        
-          
-            
+        tests: 
+          - not_null 
