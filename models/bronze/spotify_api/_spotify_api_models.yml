@@ -72,8 +72,18 @@ models:
     columns: 
       - name: original_id
         tests:
+          - unique
           - not_null
       - name: hashed_id
+        tests:
+          - not_null
+      - name: username
+        tests:
+          - not_null
+      - name: name
+        tests:
+          - not_null
+      - name: email
         tests:
           - not_null
           

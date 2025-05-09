@@ -90,3 +90,22 @@ sources:
           - name: skipped
             data_type: boolean
             description: "Wether the track was skipped"
+      
+      - name: users
+        description: "Data corresponding to users"
+        columns: 
+            - name: original_id
+              data_type: varchar
+              description: "Identifier for a user"
+            - name: hashed_id
+              data_type: varchar
+              description: "Hashed identifier for a user"
+            - name: username
+              data_type: varchar
+              description: "Username used in the platform by the user"
+            - name: name
+              data_type: varchar
+              description: "Full name of the user"
+            - name: email
+              data_type: varchar
+              description: "Email used by the user in the platform"
