@@ -40,7 +40,7 @@ src_spotify_api_history AS (
 filtered_sah AS (
     SELECT
           sah.uri
-        , sah.ts
+        , TO_TIMESTAMP(sah.ts, 'YYYY-MM-DD HH24:MI:SS') AS TS
         , sah.platform
         , sah.ms_played
         , sah.track_name
@@ -63,7 +63,7 @@ src_spotify_api_history2 AS (
 filtered_sah2 AS (
     SELECT
           sah.uri
-        , sah.ts
+        , TO_TIMESTAMP(sah.ts, 'YYYY-MM-DD HH24:MI:SS') AS TS
         , sah.platform
         , sah.ms_played
         , sah.track_name
