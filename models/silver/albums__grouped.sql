@@ -12,6 +12,7 @@ WITH src_kaggle_history AS (
 filtered_kh AS (
     SELECT
           album_name
+        , artist_name
     FROM src_kaggle_history
     ),
 
@@ -23,6 +24,7 @@ src_spotify_api_history AS (
 filtered_sah AS (
     SELECT
           album_name
+        , artist_name
     FROM src_kaggle_history
     ),
 
@@ -34,17 +36,18 @@ src_spotify_api_history2 AS (
 filtered_sah2 AS (
     SELECT
           album_name
+        , artist_name
     FROM src_spotify_api_history2
     )
 
-SELECT    distinct (md5(album_name)) AS album_id 
+SELECT    distinct (md5(album_name || artist_name)) AS album_id 
         , album_name 
 FROM filtered_kh
 UNION 
-SELECT    distinct (md5(album_name)) AS album_id 
+SELECT    distinct (md5(album_name || artist_name)) AS album_id 
         , album_name 
 FROM filtered_sah
 UNION 
-SELECT    distinct (md5(album_name)) AS album_id 
+SELECT    distinct (md5(album_name || artist_name)) AS album_id 
         , album_name 
 FROM filtered_sah2
