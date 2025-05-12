@@ -14,10 +14,8 @@ listenings AS (
     FROM src_listenings
     )
 SELECT 
-      DISTINCT md5(reason_end) AS id_reason_ended
+      DISTINCT md5(reason_end) AS id_reason_end
     , reason_end
 FROM 
     listenings
 WHERE reason_end IS NOT NULL
-UNION ALL
-SELECT '9999', 'UNKNOWN';

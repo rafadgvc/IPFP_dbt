@@ -1,0 +1,170 @@
+version: 2
+
+sources:
+
+  - name: gold
+    schema: gold
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_ICAROSPATH_DB"
+
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    
+
+    freshness:
+      warn_after: {count: 10, period: day}
+      error_after: {count: 20, period: day}
+    
+    tables:
+      - name: fct_listenings
+        description: "Facts with the listening habits of the users"
+        columns:
+          - name: uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+          - name: date_id
+            data_type: int
+            description: "Date identifier in which the listening took place"
+          - name: time_id
+            data_type: int
+            description: "Time identifier in which the listening took place"
+          - name: id_platform
+            data_type: varchar
+            description: "Platform identifier in which the listening took place"
+          - name: ms_played
+            data_type: varchar
+            description: "Miliseconds that the listening lasted"
+          - name: id_reason_start
+            data_type: varchar
+            description: "Identifier for why the track started playing"
+          - name: id_reason_end
+            data_type: varchar
+            description: "Identifier for why the track stopped playing"
+          - name: shuffle
+            data_type: boolean
+            description: "Wether, in the beginning of the listening, shuffle was activated"
+          - name: skipped
+            data_type: boolean
+            description: "Wether the track was skipped"
+          - name: hashed_user_id
+            data_type: varchar
+            description: "Hashed id of the user that listened to the track"
+
+      - name: dim_why_started
+        description: "Data corresponding to the Why Started Dimension"
+        columns: 
+          - name: id_reason_start
+            data_type: varchar
+            description: "Identifier for the reason why it started"
+          - name: reason_start
+            data_type: varchar
+            description: "Why it started"
+
+      - name: dim_why_ended
+        description: "Data corresponding to the Why Ended Dimension"
+        columns: 
+          - name: id_reason_end
+            data_type: varchar
+            description: "Identifier for the reason why it ended"
+          - name: reason_start
+            data_type: varchar
+            description: "Why it started"
+      
+      - name: dim_who
+        description: "Data corresponding to the Who Dimmension, that represents users"
+        columns: 
+            - name: original_id
+              data_type: varchar
+              description: "Identifier for a user"
+            - name: hashed_id
+              data_type: varchar
+              description: "Hashed identifier for a user"
+            - name: username
+              data_type: varchar
+              description: "Username used in the platform by the user"
+            - name: name
+              data_type: varchar
+              description: "Full name of the user"
+            - name: email
+              data_type: varchar
+              description: "Email used by the user in the platform"
+
+      - name: dim_where
+        description: "Data corresponding to the Where Dimension, that represents paltforms of listenings"
+        columns: 
+          - name: id_platform
+            data_type: varchar
+            description: "Platform identifier in which the listening took place"
+          - name: platform
+            data_type: varchar
+            description: "Platform in which the listening took place"
+
+      - name: dim_when_date
+        description: "Data corresponding to the When Date Dimension, which represents which day the listenings took place"
+        columns: 
+          - name: date_id
+            data_type: varchar
+            description: "Date identifier in which the listening took place"
+          - name: year
+            data_type: int
+            description: "Year in which the listening took place"
+          - name: month
+            data_type: int
+            description: "Number of month in which the listening took place"
+          - name: month_name
+            data_type: varchar
+            description: "Name of the month in which the listening took place"
+          - name: day
+            data_type: int
+            description: "Number of the day in the month in which the listening took place"
+          - name: number_week_day
+            data_type: int
+            description: "Number of the day in the week in which the listening took place"
+          - name: week_day
+            data_type: varchar
+            description: "Name of the day in the week in which the listening took place"
+          - name: quarter
+            data_type: int
+            description: "Quarter of the year in which the listening took place"
+
+      - name: dim_when_time
+        description: "Data corresponding to the When Date Dimension, which represents which day the listenings took place"
+        columns: 
+          - name: time_id
+            data_type: varchar
+            description: "Time identifier in which the listening took place"
+          - name: hour
+            data_type: int
+            description: "Hour in which the listening took place"
+          - name: minute
+            data_type: int
+            description: "Minute in which the listening took place"
+          - name: formatted_time
+            data_type: varchar
+            description: "Time formatted as 'HH:MM' in which the listening took place"
+          - name: moment_of_day
+            data_type: int
+            description: "Moment of the day in which the listening took place"
+  
+      - name: dim_what
+        description: "Data corresponding to the What dimension, that represents tracks"
+        columns: 
+          - name: uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+          - name: album_id
+            data_type: varchar
+            description: "Identifier for an album"
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album"
+          - name: artist_id
+            data_type: varchar
+            description: "Identifier for an artist"
+          - name: artist_name
+            data_type: varchar
+            description: "Name of the artist"

@@ -50,12 +50,13 @@ artists AS (
 
 
 SELECT 
-      t.track_name    AS track_name
-    , t.uri           AS track_id
+      DISTINCT(t.uri) AS track_id
+    , t.track_name    AS track_name
     , al.album_name   AS album_name
     , al.album_id     AS album_id
     , ar.artist_name  AS artist_name
     , ar.artist_id    AS artist_id
+
 FROM 
     listenings l
 JOIN

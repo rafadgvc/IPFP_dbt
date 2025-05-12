@@ -10,14 +10,14 @@ WITH src_listenings AS (
 
 listenings AS (
     SELECT
-          paltform
+          platform
     FROM src_listenings
     )
 SELECT 
-      DISTINCT md5(paltform) AS id_paltform
-    , paltform
+      DISTINCT md5(platform) AS id_platform
+    , platform
 FROM 
     listenings
-WHERE paltform IS NOT NULL
+WHERE platform IS NOT NULL
 UNION ALL
-SELECT '9999', 'UNKNOWN';
+SELECT '9999', 'UNKNOWN'

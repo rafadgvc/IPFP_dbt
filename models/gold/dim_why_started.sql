@@ -19,5 +19,3 @@ SELECT
 FROM 
     listenings
 WHERE reason_start IS NOT NULL
-UNION ALL
-SELECT '9999', 'UNKNOWN';
