@@ -6,7 +6,7 @@
 WITH sequenced_times AS (
     SELECT
         seq4() AS minutes
-    FROM table(generator(rowcount => 1439))
+    FROM table(generator(rowcount => 1440))
 )
 SELECT
       minutes AS time_id

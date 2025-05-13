@@ -1,6 +1,5 @@
 version: 2
 
-
 models: 
   - name: history1
     columns: 
@@ -74,6 +73,7 @@ models:
         tests:
           - unique
           - not_null
+          - accepted_user_ids
       - name: hashed_id
         tests:
           - not_null

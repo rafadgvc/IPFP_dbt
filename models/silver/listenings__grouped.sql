@@ -18,7 +18,13 @@ filtered_kh AS (
     SELECT
           kh.uri
         , kh.ts
-        , kh.platform
+        , CASE 
+            WHEN kh.platform IS NULL            THEN 'unknown'
+            WHEN kh.platform = 'iOS'            THEN 'mobile'
+            WHEN kh.platform = 'mac'            THEN 'desktop'
+            WHEN kh.platform = 'Google_Home'   THEN 'cast to device'
+            ELSE kh.platform
+            END AS platform
         , kh.ms_played
         , kh.track_name
         , kh.artist_name
@@ -47,7 +53,13 @@ filtered_sah AS (
     SELECT
           sah.uri
         , TO_TIMESTAMP(sah.ts, 'YYYY-MM-DD HH24:MI:SS') AS TS
-        , sah.platform
+        , CASE 
+            WHEN sah.platform IS NULL            THEN 'unknown'
+            WHEN sah.platform = 'iOS'            THEN 'mobile'
+            WHEN sah.platform = 'mac'            THEN 'desktop'
+            WHEN sah.platform = 'Google_Home'    THEN 'cast to device'
+            ELSE sah.platform
+            END AS platform
         , sah.ms_played
         , sah.track_name
         , sah.artist_name
@@ -76,7 +88,13 @@ filtered_sah2 AS (
     SELECT
           sah.uri
         , TO_TIMESTAMP(sah.ts, 'YYYY-MM-DD HH24:MI:SS') AS TS
-        , sah.platform
+        , CASE 
+            WHEN sah.platform IS NULL            THEN 'unknown'
+            WHEN sah.platform = 'iOS'            THEN 'mobile'
+            WHEN sah.platform = 'mac'            THEN 'desktop'
+            WHEN sah.platform = 'Google_Home'    THEN 'cast to device'
+            ELSE sah.platform
+            END AS platform
         , sah.ms_played
         , sah.track_name
         , sah.artist_name

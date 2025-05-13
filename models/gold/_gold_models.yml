@@ -7,24 +7,43 @@ models:
       - name: uri
         tests: 
           - not_null
+          - relationships:
+              field: track_id
+              to: ref('dim_what')
       - name: date_id
         tests: 
           - not_null
+          - relationships:
+              field: date_id
+              to: ref('dim_when_date')
       - name: time_id
         tests: 
           - not_null
+          - relationships:
+              field: time_id
+              to: ref('dim_when_time')
       - name: id_platform
         tests: 
           - not_null
+          - relationships:
+              field: id_platform
+              to: ref('dim_where')
       - name: ms_played
         tests: 
           - not_null
+          - values_above_5000
       - name: id_reason_start
         tests: 
           - not_null
+          - relationships:
+              field: id_reason_start
+              to: ref('dim_why_started')
       - name: id_reason_end
         tests: 
           - not_null
+          - relationships:
+              field: id_reason_end
+              to: ref('dim_why_ended')
       - name: shuffle
         tests: 
           - not_null
@@ -34,6 +53,9 @@ models:
       - name: hashed_user_id
         tests: 
           - not_null
+          - relationships:
+              field: hashed_id
+              to: ref('dim_who')
 
   - name: dim_why_started
     columns: 
@@ -45,6 +67,7 @@ models:
         tests: 
           - not_null
           - unique
+          - accepted_starting_reasons
 
   - name: dim_why_ended
     columns: 
@@ -56,6 +79,7 @@ models:
         tests: 
           - not_null
           - unique
+          - accepted_ending_reasons
 
   - name: dim_who
     columns: 
@@ -63,6 +87,7 @@ models:
         tests: 
           - not_null
           - unique
+          - accepted_user_ids
       - name: hashed_id
         tests: 
           - not_null
@@ -87,6 +112,7 @@ models:
         tests: 
           - not_null
           - unique
+          - accepted_platforms
 
   - name: dim_when_time
     columns: 

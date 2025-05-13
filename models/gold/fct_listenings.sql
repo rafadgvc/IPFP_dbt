@@ -12,7 +12,7 @@ WITH src_listenings_grouped AS (
 filtered_lg AS (
     SELECT
           uri
-        , TO_CHAR(ts, 'YYYYMMDD')::INT AS date_id
+        , ts::DATE AS date_id
         , EXTRACT(HOUR FROM ts)::INT*60 + EXTRACT(MINUTE FROM ts)::INT AS time_id
         , md5(platform) AS id_platform
         , ms_played
