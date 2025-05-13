@@ -50,12 +50,12 @@ artists AS (
 
 
 SELECT 
-      DISTINCT(t.uri) AS track_id
-    , t.track_name    AS track_name
-    , al.album_name   AS album_name
-    , al.album_id     AS album_id
-    , ar.artist_name  AS artist_name
-    , ar.artist_id    AS artist_id
+      DISTINCT(t.uri)       AS track_id
+    , MIN(t.track_name)     AS track_name
+    , MIN(al.album_name)    AS album_name
+    , MIN(al.album_id)      AS album_id
+    , MIN(ar.artist_name)   AS artist_name
+    , MIN(ar.artist_id)     AS artist_id
 
 FROM 
     listenings l
@@ -65,3 +65,4 @@ JOIN
     albums al ON l.album_name = al.album_name
 JOIN 
     artists ar ON l.artist_name = ar.artist_name
+GROUP BY track_id
