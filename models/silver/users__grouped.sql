@@ -5,7 +5,7 @@
 }}
 WITH src_spotify_users AS (
     SELECT * 
-    FROM {{ ref("bronze_spotify_api__users") }}
+    FROM {{ ref("bronze_google_sheets__users") }}
     ),
 
 grouped_users AS (

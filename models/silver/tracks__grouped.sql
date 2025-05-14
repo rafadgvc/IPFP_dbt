@@ -6,7 +6,7 @@
 
 WITH src_kaggle_history AS (
     SELECT * 
-    FROM {{ ref("bronze_kaggle__history") }}
+    FROM {{ ref("bronze_google_sheets__history_kaggle") }}
     ),
 
 filtered_kh AS (
@@ -18,7 +18,7 @@ filtered_kh AS (
 
 src_spotify_api_history AS (
     SELECT * 
-    FROM {{ ref("bronze_spotify_api__history") }}
+    FROM {{ ref("bronze_google_sheets__history_self") }}
     ),
 
 filtered_sah AS (
@@ -30,7 +30,7 @@ filtered_sah AS (
 
 src_spotify_api_history2 AS (
     SELECT * 
-    FROM {{ ref("bronze_spotify_api__history2") }}
+    FROM {{ ref("bronze_google_sheets__history_artificial") }}
     ),
 
 filtered_sah2 AS (
@@ -42,7 +42,7 @@ filtered_sah2 AS (
 
 src_kaggle_tracks AS (
     SELECT * 
-    FROM {{ ref("bronze_kaggle__tracks_data") }}
+    FROM {{ ref("bronze_google_sheets__tracks_data") }}
     ),
 
 filtered_kt AS (
