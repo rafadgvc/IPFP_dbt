@@ -52,7 +52,7 @@ src_spotify_api_history AS (
 filtered_sah AS (
     SELECT
           sah.uri
-        , TO_TIMESTAMP(sah.ts, 'YYYY-MM-DD HH24:MI:SS') AS TS
+        , TS
         , CASE 
             WHEN sah.platform IS NULL            THEN 'unknown'
             WHEN sah.platform = 'iOS'            THEN 'mobile'
@@ -87,7 +87,7 @@ src_spotify_api_history2 AS (
 filtered_sah2 AS (
     SELECT
           sah.uri
-        , TO_TIMESTAMP(sah.ts, 'YYYY-MM-DD HH24:MI:SS') AS TS
+        , TS
         , CASE 
             WHEN sah.platform IS NULL            THEN 'unknown'
             WHEN sah.platform = 'iOS'            THEN 'mobile'

@@ -162,7 +162,7 @@ models:
         tests: 
           - not_null
 
-  - name: users
+  - name: base_users
     columns: 
       - name: original_id
         tests:

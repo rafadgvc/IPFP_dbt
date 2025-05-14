@@ -6,7 +6,7 @@
 
 WITH src_tracks_data AS (
     SELECT * 
-    FROM {{ source('kaggle', 'songs_data') }}
+    FROM {{ source('google_sheets', 'songs_data') }}
     ),
 
 renamed_casted AS (
@@ -27,7 +27,7 @@ renamed_casted AS (
         , mode
         , name
         , popularity
-        , realease_date AS release_date
+        , release_date
         , speechiness
         , tempo
     FROM src_tracks_data
