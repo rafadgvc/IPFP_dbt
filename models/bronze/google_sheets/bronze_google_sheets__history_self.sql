@@ -6,7 +6,7 @@
 
 WITH src_history AS (
     SELECT * 
-    FROM {{ source('kaggle', 'history') }}
+    FROM {{ source('google_sheets', 'history_self') }}
     ),
 
 renamed_casted AS (

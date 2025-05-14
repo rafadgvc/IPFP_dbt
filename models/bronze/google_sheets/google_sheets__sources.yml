@@ -2,8 +2,8 @@ version: 2
 
 sources:
 
-  - name: kaggle
-    schema: kaggle
+  - name: google_sheets
+    schema: google_sheets
     database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_ICAROSPATH_DB"
 
     quoting:
@@ -17,7 +17,7 @@ sources:
       error_after: {count: 20, period: day}
 
     tables:
-      - name: history
+      - name: history_kaggle
         description: "History of the first user's listening habits"
         columns:
           - name: spotify_track_uri
@@ -114,3 +114,97 @@ sources:
           - name: tempo
             data_type: varchar
             description: "Tempo of the track"
+            
+      - name: history_self
+        description: "History of the second user's listening habits"
+        columns:
+          - name: spotify_track_uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+          - name: ts
+            data_type: timestamp_ntz
+            description: "Date and time in which the listening was done"
+          - name: platform
+            data_type: varchar
+            description: "Platform in which the listening took place"
+          - name: ms_played
+            data_type: varchar
+            description: "Miliseconds that the listening lasted"
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+          - name: artist_name
+            data_type: varchar
+            description: "Name of the main artist that made the song"
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album that the song belongs to"
+          - name: reason_start
+            data_type: varchar
+            description: "Why the track started playing"
+          - name: reason_end
+            data_type: varchar
+            description: "Why the track stopped playing"
+          - name: shuffle
+            data_type: boolean
+            description: "Wether, in the beginning of the listening, shuffle was activated"
+          - name: skipped
+            data_type: boolean
+            description: "Wether the track was skipped"
+      
+      - name: history_artificial
+        description: "History of the artificial user's listening habits"
+        columns:
+          - name: spotify_track_uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+          - name: ts
+            data_type: timestamp_ntz
+            description: "Date and time in which the listening was done"
+          - name: platform
+            data_type: varchar
+            description: "Platform in which the listening took place"
+          - name: ms_played
+            data_type: varchar
+            description: "Miliseconds that the listening lasted"
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+          - name: artist_name
+            data_type: varchar
+            description: "Name of the main artist that made the song"
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album that the song belongs to"
+          - name: reason_start
+            data_type: varchar
+            description: "Why the track started playing"
+          - name: reason_end
+            data_type: varchar
+            description: "Why the track stopped playing"
+          - name: shuffle
+            data_type: boolean
+            description: "Wether, in the beginning of the listening, shuffle was activated"
+          - name: skipped
+            data_type: boolean
+            description: "Wether the track was skipped"
+      
+      - name: users
+        description: "Data corresponding to users"
+        columns: 
+            - name: original_id
+              data_type: varchar
+              description: "Identifier for a user"
+            - name: hashed_id
+              data_type: varchar
+              description: "Hashed identifier for a user"
+            - name: username
+              data_type: varchar
+              description: "Username used in the platform by the user"
+            - name: name
+              data_type: varchar
+              description: "Full name of the user"
+            - name: email
+              data_type: varchar
+              description: "Email used by the user in the platform"
+

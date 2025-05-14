@@ -6,7 +6,7 @@
 
 WITH src_history AS (
     SELECT * 
-    FROM {{ source('spotify_api', 'history2') }}
+    FROM {{ source('google_sheets', 'history_artificial') }}
     ),
 
 renamed_casted AS (

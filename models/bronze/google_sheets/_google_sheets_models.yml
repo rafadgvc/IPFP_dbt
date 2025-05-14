@@ -2,7 +2,7 @@ version: 2
 
 
 models: 
-  - name: history
+  - name: history_kaggle
     columns: 
       - name: uri
         tests: 
@@ -95,8 +95,93 @@ models:
       - name: tempo
         tests: 
           - not_null
-          
-          
+
+  - name: history_self
+    columns: 
+      - name: uri
+        tests: 
+          - not_null
+      - name: ts 
+        tests:
+          - not_null
+      - name: platform
+        tests: 
+          - not_null
+      - name: ms_played
+        tests: 
+          - not_null
+      - name: track_name
+        tests:
+          - not_null
+      - name: artist_name
+        tests:
+          - not_null
+      - name: album_name
+        tests:
+          - not_null
+      - name: reason_start
+        tests:
+          - not_null
+      - name: reason_end
+        tests:
+          - not_null
+      - name: shuffle
+        tests: 
+          - not_null
+
+  - name: history_artificial
+    columns: 
+      - name: uri
+        tests: 
+          - not_null
+      - name: ts 
+        tests:
+          - not_null
+      - name: platform
+        tests: 
+          - not_null
+      - name: ms_played
+        tests: 
+          - not_null
+      - name: track_name
+        tests:
+          - not_null
+      - name: artist_name
+        tests:
+          - not_null
+      - name: album_name
+        tests:
+          - not_null
+      - name: reason_start
+        tests:
+          - not_null
+      - name: reason_end
+        tests:
+          - not_null
+      - name: shuffle
+        tests: 
+          - not_null
+
+  - name: users
+    columns: 
+      - name: original_id
+        tests:
+          - unique
+          - not_null
+          - accepted_user_ids
+      - name: hashed_id
+        tests:
+          - not_null
+      - name: username
+        tests:
+          - not_null
+      - name: name
+        tests:
+          - not_null
+      - name: email
+        tests:
+          - not_null
+    
       
       
         
