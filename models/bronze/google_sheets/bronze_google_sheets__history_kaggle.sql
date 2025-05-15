@@ -11,7 +11,8 @@ WITH src_history AS (
 
 renamed_casted AS (
     SELECT
-          spotify_track_uri AS uri
+          _row
+        , spotify_track_uri AS uri
         , ts
         , platform
         , ms_played
@@ -22,6 +23,7 @@ renamed_casted AS (
         , reason_end
         , shuffle
         , skipped
+        , _fivetran_synced AS date_load
     FROM src_history
     )
 

@@ -10,7 +10,9 @@ WITH src_kaggle_history AS (
 
 filtered_kh AS (
     SELECT
-          artist_name
+          _row
+        , artist_name
+        , date_load
     FROM src_kaggle_history
     ),
 src_spotify_api_history AS (
@@ -20,7 +22,9 @@ src_spotify_api_history AS (
 
 filtered_sah AS (
     SELECT
-          artist_name
+          _row
+        , artist_name
+        , date_load
     FROM src_spotify_api_history
     ),
 
@@ -31,7 +35,9 @@ src_spotify_api_history2 AS (
 
 filtered_sah2 AS (
     SELECT
-          artist_name
+          _row
+        , artist_name
+        , date_load
     FROM src_spotify_api_history2
     ),
 
@@ -43,22 +49,36 @@ src_kaggle_tracks AS (
 filtered_kt AS (
     SELECT
           
-           regexp_substr(artists, '''([^'']+)''', 1, 1, 'e', 1)   AS artist_name
+          _row
+        , regexp_substr(artists, '''([^'']+)''', 1, 1, 'e', 1)   AS artist_name
+        , date_load
     FROM src_kaggle_tracks
     )
 
-SELECT    distinct md5(artist_name) AS artist_id 
+SELECT
+          distinct md5(artist_name) AS artist_id
+        , _row
+        , date_load    
         , artist_name 
 FROM filtered_kh
 UNION 
-SELECT    distinct md5(artist_name) AS artist_id 
+SELECT
+          distinct md5(artist_name) AS artist_id
+        , _row
+        , date_load    
         , artist_name 
 FROM filtered_sah
 UNION 
-SELECT    distinct md5(artist_name) AS artist_id 
-        , artist_name 
+SELECT
+          distinct md5(artist_name) AS artist_id
+        , _row
+        , date_load    
+        , artist_name  
 FROM filtered_sah2
 UNION 
-SELECT    distinct md5(artist_name) AS artist_id 
-        , artist_name  
+SELECT
+          distinct md5(artist_name) AS artist_id
+        , _row
+        , date_load    
+        , artist_name 
 FROM filtered_kt

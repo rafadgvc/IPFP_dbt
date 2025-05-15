@@ -4,6 +4,10 @@ version: 2
 models: 
   - name: history_kaggle
     columns: 
+      - name: _row
+        tests:
+          - not_null
+          - unique
       - name: uri
         tests: 
           - not_null
@@ -34,9 +38,16 @@ models:
       - name: shuffle
         tests: 
           - not_null
+      - name: date_load
+        tests:
+          - not_null
 
   - name: tracks_data
     columns: 
+      - name: _row
+        tests:
+          - not_null
+          - unique
       - name: valence
         tests: 
           - not_null
@@ -95,9 +106,16 @@ models:
       - name: tempo
         tests: 
           - not_null
+      - name: date_load
+        tests:
+          - not_null
 
   - name: history_self
-    columns: 
+    columns:
+      - name: _row
+        tests:
+          - not_null
+          - unique 
       - name: uri
         tests: 
           - not_null
@@ -127,10 +145,17 @@ models:
           - not_null
       - name: shuffle
         tests: 
+          - not_null
+      - name: date_load
+        tests:
           - not_null
 
   - name: history_artificial
     columns: 
+      - name: _row
+        tests:
+          - not_null
+          - unique
       - name: uri
         tests: 
           - not_null
@@ -160,6 +185,9 @@ models:
           - not_null
       - name: shuffle
         tests: 
+          - not_null
+      - name: date_load
+        tests:
           - not_null
 
   - name: base_users
@@ -181,6 +209,7 @@ models:
       - name: email
         tests:
           - not_null
+      
     
       
       

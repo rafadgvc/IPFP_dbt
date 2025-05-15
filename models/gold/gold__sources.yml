@@ -20,6 +20,12 @@ sources:
       - name: fct_listenings
         description: "Facts with the listening habits of the users"
         columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+          - name: listening_id
+            data_type: varchar
+            description: "Identificator for a listening made by a user"
           - name: uri
             data_type: varchar
             description: "Track URI to identify it in Spotify"
@@ -50,6 +56,9 @@ sources:
           - name: hashed_user_id
             data_type: varchar
             description: "Hashed id of the user that listened to the track"
+          - name: date_load
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
 
       - name: dim_why_started
         description: "Data corresponding to the Why Started Dimension"

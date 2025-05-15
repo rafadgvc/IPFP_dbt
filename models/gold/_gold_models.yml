@@ -4,6 +4,13 @@ version: 2
 models: 
   - name: fct_listenings
     columns: 
+      - name: _row
+        tests:
+          - not_null
+      - name: listening_id
+        tests:
+          - not_null
+          - unique
       - name: uri
         tests: 
           - not_null
@@ -56,6 +63,9 @@ models:
           - relationships:
               field: hashed_id
               to: ref('dim_who')
+      - name: date_load
+        tests:
+          - not_null
 
   - name: dim_why_started
     columns: 

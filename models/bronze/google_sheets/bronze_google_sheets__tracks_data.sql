@@ -11,7 +11,8 @@ WITH src_tracks_data AS (
 
 renamed_casted AS (
     SELECT
-          valence
+          _row
+        , valence
         , year
         , acousticness
         , artists
@@ -30,6 +31,7 @@ renamed_casted AS (
         , release_date
         , speechiness
         , tempo
+        , _fivetran_synced AS date_load
     FROM src_tracks_data
     )
 

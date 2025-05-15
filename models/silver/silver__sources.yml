@@ -18,8 +18,17 @@ sources:
 
     tables:
       - name: listenings
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
         description: "Listening habits of the users"
         columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+          - name: listening_id
+            data_type: varchar
+            description: "Identificator for a listening made by a user"
           - name: uri
             data_type: varchar
             description: "Track URI to identify it in Spotify"
@@ -56,35 +65,66 @@ sources:
           - name: hashed_user_id
             data_type: varchar
             description: "Hashed id of the user that listened to the track"
+          - name: date_load
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
+
       - name: tracks
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
         description: "Data corresponding to tracks"
         columns: 
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
           - name: uri
             data_type: varchar
             description: "Track URI to identify it in Spotify"
           - name: track_name
             data_type: varchar
             description: "Name of the track"
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
 
       - name: albums
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
         description: "Data corresponding to albums, EPs and singles"
         columns: 
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
           - name: album_id
             data_type: varchar
             description: "Identifier for an album"
           - name: album_name
             data_type: varchar
             description: "Name of the album"
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
       
       - name: artists
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
         description: "Data corresponding to artists"
         columns: 
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
           - name: artist_id
             data_type: varchar
             description: "Identifier for an artist"
           - name: artist_name
             data_type: varchar
             description: "Name of the artist"
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
       
       - name: users
         description: "Data corresponding to users"

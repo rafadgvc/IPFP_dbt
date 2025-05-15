@@ -11,7 +11,9 @@ WITH src_listenings_grouped AS (
 
 filtered_lg AS (
     SELECT
-          uri
+          listening_id
+        , _row
+        , uri
         , ts::DATE AS date_id
         , EXTRACT(HOUR FROM ts)::INT*60 + EXTRACT(MINUTE FROM ts)::INT AS time_id
         , md5(platform) AS id_platform
@@ -27,6 +29,7 @@ filtered_lg AS (
         , shuffle
         , skipped
         , hashed_user_id
+        , date_load
     FROM src_listenings_grouped
     )
 

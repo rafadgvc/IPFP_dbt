@@ -11,8 +11,10 @@ WITH src_kaggle_history AS (
 
 filtered_kh AS (
     SELECT
-          uri
+          _row
+        , uri
         , track_name
+        , date_load
     FROM src_kaggle_history
     ),
 
@@ -23,8 +25,10 @@ src_spotify_api_history AS (
 
 filtered_sah AS (
     SELECT
-          uri
+          _row
+        , uri
         , track_name
+        , date_load
     FROM src_spotify_api_history
     ),
 
@@ -35,8 +39,10 @@ src_spotify_api_history2 AS (
 
 filtered_sah2 AS (
     SELECT
-          uri
+          _row
+        , uri
         , track_name
+        , date_load
     FROM src_spotify_api_history2
     ),
 
@@ -47,8 +53,10 @@ src_kaggle_tracks AS (
 
 filtered_kt AS (
     SELECT
-          id AS uri
+          _row
+        , id AS uri
         , name AS track_name
+        , date_load
     FROM src_kaggle_tracks
     )
 

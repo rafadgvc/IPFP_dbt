@@ -11,15 +11,22 @@ sources:
       schema: false
       identifier: false
     
-
+    # on a real case, docs sources should be updated to every 6 hours or less, depending on how often source google sheets were updated
+    # which means that, if data was synced i.e. every 6 hours, freshness should be about 12 hours for a warning and 24 hours for an error
     freshness:
       warn_after: {count: 10, period: day}
       error_after: {count: 20, period: day}
 
     tables:
       - name: history_kaggle
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
         description: "History of the first user's listening habits"
         columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
           - name: spotify_track_uri
             data_type: varchar
             description: "Track URI to identify it in Spotify"
@@ -53,10 +60,19 @@ sources:
           - name: skipped
             data_type: boolean
             description: "Wether the track was skipped"
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
 
       - name: songs_data
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
         description: "Data corresponding to tracks"
         columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
           - name: valence
             data_type: varchar
             description: "How positive the track is"
@@ -114,10 +130,19 @@ sources:
           - name: tempo
             data_type: varchar
             description: "Tempo of the track"
-            
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
+
       - name: history_self
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
         description: "History of the second user's listening habits"
         columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
           - name: spotify_track_uri
             data_type: varchar
             description: "Track URI to identify it in Spotify"
@@ -151,10 +176,19 @@ sources:
           - name: skipped
             data_type: boolean
             description: "Wether the track was skipped"
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
       
       - name: history_artificial
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
         description: "History of the artificial user's listening habits"
         columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
           - name: spotify_track_uri
             data_type: varchar
             description: "Track URI to identify it in Spotify"
@@ -188,6 +222,9 @@ sources:
           - name: skipped
             data_type: boolean
             description: "Wether the track was skipped"
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
       
       - name: users
         description: "Data corresponding to users"

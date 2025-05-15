@@ -16,7 +16,9 @@ src_spotify_api_users AS (
 
 filtered_kh AS (
     SELECT
-          kh.uri
+          
+          _row
+        , kh.uri
         , kh.ts
         , CASE 
             WHEN kh.platform IS NULL            THEN 'unknown'
@@ -38,6 +40,8 @@ filtered_kh AS (
             ELSE False
             END  AS skipped
         , (SELECT hashed_id FROM src_spotify_api_users WHERE original_id = '95buwo3thj5dg5s12r9trop9c') AS hashed_user_id
+        , date_load
+        , md5(_row || hashed_user_id) AS listening_id
     FROM src_kaggle_history AS kh
     WHERE 
         kh.ms_played > 5000    AND
@@ -51,7 +55,8 @@ src_spotify_api_history AS (
 
 filtered_sah AS (
     SELECT
-          sah.uri
+          _row
+        , sah.uri
         , TS
         , CASE 
             WHEN sah.platform IS NULL            THEN 'unknown'
@@ -73,6 +78,8 @@ filtered_sah AS (
             ELSE False
             END AS skipped
         , (SELECT hashed_id FROM src_spotify_api_users WHERE original_id = '62wauy6fpg5dg5s86y9bpof1r') AS hashed_user_id
+        , date_load
+        , md5(_row || hashed_user_id) AS listening_id
     FROM src_spotify_api_history AS sah
     WHERE 
         sah.ms_played > 5000    AND
@@ -86,7 +93,8 @@ src_spotify_api_history2 AS (
 
 filtered_sah2 AS (
     SELECT
-          sah.uri
+          _row
+        , sah.uri
         , TS
         , CASE 
             WHEN sah.platform IS NULL            THEN 'unknown'
@@ -108,6 +116,8 @@ filtered_sah2 AS (
             ELSE False
             END AS skipped
         , (SELECT hashed_id FROM src_spotify_api_users WHERE original_id = '14ysrj7atn9yn9s57h8cuie3w') AS hashed_user_id
+        , date_load
+        , md5(_row || hashed_user_id) AS listening_id
     FROM src_spotify_api_history2 AS sah
     WHERE 
         sah.ms_played > 5000    AND
