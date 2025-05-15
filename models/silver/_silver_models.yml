@@ -7,6 +7,7 @@ models:
       - name: _row
         tests:
           - not_null
+          - positive_values
       - name: listening_id
         tests:
           - not_null
@@ -52,12 +53,14 @@ models:
       - name: date_load
         tests:
           - not_null
+          - values_after_may_2025
 
   - name: tracks
     columns:
       - name: _row
         tests:
           - not_null
+          - positive_values
       - name: uri
         tests:
           - not_null
@@ -68,12 +71,14 @@ models:
       - name: date_load
         tests:
           - not_null
+          - values_after_may_2025
   
   - name: albums
     columns:
       - name: _row
         tests:
           - not_null
+          - positive_values
       - name: album_id
         tests:
           - not_null
@@ -84,12 +89,14 @@ models:
       - name: date_load
         tests:
           - not_null
+          - values_after_may_2025
   
   - name: artists
     columns:
       - name: _row
         tests:
           - not_null
+          - positive_values
       - name: artist_id
         tests:
           - not_null
@@ -100,6 +107,7 @@ models:
       - name: date_load
         tests:
           - not_null
+          - values_after_may_2025
   
   - name: users
     columns: 

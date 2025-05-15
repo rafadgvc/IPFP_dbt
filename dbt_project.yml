@@ -37,14 +37,20 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 models:
     +transient: false
-
     bronze: 
       +materialized: view
       +database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_DB"
-      kaggle:
-        +schema: kaggle
-      spotify_api:
-        +schema: spotify_api
+      google_sheets:
+        +schema: google_sheets
+        history_kaggle:
+          +materialized: table
+        history_self:
+          +materialized: table
+        history_artificial:
+          +materialized: table
+        tracks_data:
+          +materialized: table
+
     
     silver: 
       +materialized: view

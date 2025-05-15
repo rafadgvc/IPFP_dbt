@@ -39,7 +39,7 @@ sources:
             data_type: varchar
             description: "Platform in which the listening took place"
           - name: ms_played
-            data_type: varchar
+            data_type: int
             description: "Miliseconds that the listening lasted"
           - name: track_name
             data_type: varchar

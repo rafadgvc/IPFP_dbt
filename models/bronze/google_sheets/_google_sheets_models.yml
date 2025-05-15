@@ -8,6 +8,7 @@ models:
         tests:
           - not_null
           - unique
+          - positive_values
       - name: uri
         tests: 
           - not_null
@@ -20,6 +21,7 @@ models:
       - name: ms_played
         tests: 
           - not_null
+          - positive_values
       - name: track_name
         tests:
           - not_null
@@ -41,6 +43,7 @@ models:
       - name: date_load
         tests:
           - not_null
+          - values_after_may_2025
 
   - name: tracks_data
     columns: 
@@ -48,6 +51,7 @@ models:
         tests:
           - not_null
           - unique
+          - positive_values
       - name: valence
         tests: 
           - not_null
@@ -109,6 +113,7 @@ models:
       - name: date_load
         tests:
           - not_null
+          - values_after_may_2025
 
   - name: history_self
     columns:
@@ -116,6 +121,7 @@ models:
         tests:
           - not_null
           - unique 
+          - positive_values
       - name: uri
         tests: 
           - not_null
@@ -128,6 +134,7 @@ models:
       - name: ms_played
         tests: 
           - not_null
+          - positive_values
       - name: track_name
         tests:
           - not_null
@@ -149,6 +156,7 @@ models:
       - name: date_load
         tests:
           - not_null
+          - values_after_may_2025
 
   - name: history_artificial
     columns: 
@@ -156,6 +164,7 @@ models:
         tests:
           - not_null
           - unique
+          - positive_values
       - name: uri
         tests: 
           - not_null
@@ -168,6 +177,7 @@ models:
       - name: ms_played
         tests: 
           - not_null
+          - positive_values
       - name: track_name
         tests:
           - not_null
@@ -189,6 +199,7 @@ models:
       - name: date_load
         tests:
           - not_null
+          - values_after_may_2025
 
   - name: base_users
     columns: 

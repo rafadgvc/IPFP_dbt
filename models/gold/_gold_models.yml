@@ -7,6 +7,7 @@ models:
       - name: _row
         tests:
           - not_null
+          - positive_values
       - name: listening_id
         tests:
           - not_null
@@ -20,12 +21,14 @@ models:
       - name: date_id
         tests: 
           - not_null
+          - positive_values
           - relationships:
               field: date_id
               to: ref('dim_when_date')
       - name: time_id
         tests: 
           - not_null
+          - positive_values
           - relationships:
               field: time_id
               to: ref('dim_when_time')
@@ -66,6 +69,7 @@ models:
       - name: date_load
         tests:
           - not_null
+          - values_after_may_2025
 
   - name: dim_why_started
     columns: 
@@ -105,12 +109,14 @@ models:
       - name: username
         tests: 
           - not_null
+          - unique
       - name: name
         tests: 
           - not_null
       - name: email
         tests: 
           - not_null
+          - unique
 
   - name: dim_where
     columns: 
@@ -133,15 +139,23 @@ models:
       - name: hour
         tests: 
           - not_null
+          - positive_values
       - name: minute
         tests: 
           - not_null
+          - positive_values
       - name: formatted_time
         tests: 
           - not_null
       - name: moment_of_day
         tests: 
           - not_null
+          - accepted_values:
+              values:
+                - "Morning"
+                - "Midday"
+                - "Evening"
+                - "Night"
 
   - name: dim_when_date
     columns: 
@@ -149,27 +163,35 @@ models:
         tests: 
           - not_null
           - unique
+          - values_after_2008
       - name: year
         tests: 
           - not_null
+          - positive_values
       - name: month
         tests: 
           - not_null
+          - positive_values
+          - values_below_13
       - name: month_name
         tests: 
           - not_null
       - name: day
         tests: 
           - not_null
+          - positive_values
       - name: number_week_day
         tests: 
           - not_null
+          - positive_values
+          - values_below_7
       - name: week_day
         tests: 
           - not_null
       - name: quarter
         tests: 
           - not_null
+          - positive_values
 
   - name: dim_what
     columns: 

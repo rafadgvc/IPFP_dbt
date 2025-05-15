@@ -15,7 +15,7 @@ renamed_casted AS (
         , spotify_track_uri AS uri
         , ts
         , platform
-        , ms_played
+        , ms_played::INT AS ms_played
         , track_name
         , artist_name
         , album_name

@@ -2,6 +2,7 @@ version: 2
 
 sources:
 
+  # data will be obtained from the google_sheets schema in the RAFAELDELGADO_DEV_BRONZE_ICAROSPATH_DB/RAFAELDELGADO_PRO_BRONZE_ICAROSPATH_DB database
   - name: google_sheets
     schema: google_sheets
     database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_ICAROSPATH_DB"
@@ -20,7 +21,7 @@ sources:
     tables:
       - name: history_kaggle
         config:
-          event_time: _fivetran_synced
+          event_time: _fivetran_synced                                    # This allows the freshness to be established through the _fivetran_synced column
           loaded_at_field: _fivetran_synced
         description: "History of the first user's listening habits"
         columns:
@@ -37,7 +38,7 @@ sources:
             data_type: varchar
             description: "Platform in which the listening took place"
           - name: ms_played
-            data_type: varchar
+            data_type: int
             description: "Miliseconds that the listening lasted"
           - name: track_name
             data_type: varchar
@@ -66,7 +67,7 @@ sources:
 
       - name: songs_data
         config:
-          event_time: _fivetran_synced
+          event_time: _fivetran_synced                                    # This allows the freshness to be established through the _fivetran_synced column                                    
           loaded_at_field: _fivetran_synced
         description: "Data corresponding to tracks"
         columns:
@@ -136,7 +137,7 @@ sources:
 
       - name: history_self
         config:
-          event_time: _fivetran_synced
+          event_time: _fivetran_synced                                    # This allows the freshness to be established through the _fivetran_synced column
           loaded_at_field: _fivetran_synced
         description: "History of the second user's listening habits"
         columns:
@@ -153,7 +154,7 @@ sources:
             data_type: varchar
             description: "Platform in which the listening took place"
           - name: ms_played
-            data_type: varchar
+            data_type: int
             description: "Miliseconds that the listening lasted"
           - name: track_name
             data_type: varchar
@@ -182,7 +183,7 @@ sources:
       
       - name: history_artificial
         config:
-          event_time: _fivetran_synced
+          event_time: _fivetran_synced                                    # This allows the freshness to be established through the _fivetran_synced column
           loaded_at_field: _fivetran_synced
         description: "History of the artificial user's listening habits"
         columns:
@@ -199,7 +200,7 @@ sources:
             data_type: varchar
             description: "Platform in which the listening took place"
           - name: ms_played
-            data_type: varchar
+            data_type: int
             description: "Miliseconds that the listening lasted"
           - name: track_name
             data_type: varchar
@@ -227,9 +228,9 @@ sources:
             description: "Date when the data was loaded in Snowflake"
       
       - name: users
-        description: "Data corresponding to users"
-        columns: 
-            - name: original_id
+        description: "Data corresponding to users"                          # Since users are hardcoded, their values should not be checked for freshness
+        columns:                                                            # Again, in a real case, this information would most likely come from the sources,
+            - name: original_id                                             # and be treated like the rest of the tables (since it would have a column to track this)
               data_type: varchar
               description: "Identifier for a user"
             - name: hashed_id
