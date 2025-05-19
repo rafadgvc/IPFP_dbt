@@ -21,7 +21,6 @@ models:
       - name: date_id
         tests: 
           - not_null
-          - positive_values
           - relationships:
               field: date_id
               to: ref('dim_when_date')

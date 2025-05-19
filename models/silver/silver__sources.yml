@@ -127,21 +127,36 @@ sources:
             description: "Date when the data was loaded in Snowflake"
       
       - name: users
-        description: "Data corresponding to users"
-        columns: 
-            - name: original_id
+        description: "Data corresponding to users"                          # Since users are hardcoded, their values should not be checked for freshness
+        columns:                                                            # Again, in a real case, this information would most likely come from the sources,
+            - name: original_id                                             # and be treated like the rest of the tables (since it would have a column to track this)
               data_type: varchar
               description: "Identifier for a user"
+              tests:
+                - unique
+                - not_null
+                - accepted_user_ids
             - name: hashed_id
               data_type: varchar
               description: "Hashed identifier for a user"
+              tests:
+                - not_null
+                - unique
             - name: username
               data_type: varchar
               description: "Username used in the platform by the user"
+              tests:
+                - not_null
+                - unique
             - name: name
               data_type: varchar
               description: "Full name of the user"
+              tests:
+                - not_null
             - name: email
               data_type: varchar
               description: "Email used by the user in the platform"
+              tests:
+                - not_null
+                - unique
             
