@@ -43,13 +43,17 @@ models:
       - name: reason_end
         tests:
           - not_null
-          - aceepted_ending_reasons
+          - accepted_ending_reasons
       - name: shuffle
         tests: 
           - not_null
       - name: hashed_user_id
         tests:
           - not_null
+          - relationships:
+              field: hashed_id
+              to: ref('base_users')
+
       - name: date_load
         tests:
           - not_null
@@ -111,11 +115,6 @@ models:
   
   - name: users
     columns: 
-      - name: original_id
-        tests: 
-          - not_null 
-          - unique 
-          - accepted_user_ids
       - name: hashed_id
         tests: 
           - not_null 
@@ -128,3 +127,18 @@ models:
       - name: email
         tests:
           - not_null
+  
+  - name: users_id
+    columns: 
+      - name: original_id
+        tests: 
+          - not_null 
+          - unique 
+          - accepted_user_ids
+      - name: hashed_id
+        tests: 
+          - not_null 
+          - unique
+          - relationships:
+              field: hashed_id
+              to: ref('base_users')

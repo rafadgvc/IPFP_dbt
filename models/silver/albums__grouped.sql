@@ -1,6 +1,6 @@
 {{
   config(
-    materialized='view'
+    materialized='table'
   )
 }}
 
@@ -46,21 +46,24 @@ filtered_sah2 AS (
     FROM src_spotify_api_history2
     )
 
-SELECT
+SELECT    -- the only rare instances in which an artist has two albums with the same name is in a deluxe version of it or similar,
+          -- and in these cases tracks included in the "older" version are included in the new one, so we can safely assume they will be the same one
           distinct (md5(album_name || artist_name)) AS album_id
         , _row
         , album_name 
         , date_load
 FROM filtered_kh
 UNION 
-SELECT
+SELECT    -- the only rare instances in which an artist has two albums with the same name is in a deluxe version of it or similar,
+          -- and in these cases tracks included in the "older" version are included in the new one, so we can safely assume they will be the same one
           distinct (md5(album_name || artist_name)) AS album_id
         , _row
         , album_name 
         , date_load
 FROM filtered_sah
 UNION 
-SELECT
+SELECT    -- the only rare instances in which an artist has two albums with the same name is in a deluxe version of it or similar,
+          -- and in these cases tracks included in the "older" version are included in the new one, so we can safely assume they will be the same one
           distinct (md5(album_name || artist_name)) AS album_id
         , _row
         , album_name 

@@ -1,6 +1,6 @@
 {{
   config(
-    materialized='view'
+    materialized='table'
   )
 }}
 WITH src_kaggle_history AS (
@@ -50,34 +50,35 @@ filtered_kt AS (
     SELECT
           
           _row
-        , regexp_substr(artists, '''([^'']+)''', 1, 1, 'e', 1)   AS artist_name
+        -- this allows to transform artist names from "['artist1', 'artist2'...]"" to "artist1", so that only the first artist name is kept
+        , regexp_substr(artists, '''([^'']+)''', 1, 1, 'e', 1)   AS artist_name  
         , date_load
     FROM src_kaggle_tracks
     )
 
 SELECT
-          distinct md5(artist_name) AS artist_id
+          distinct md5(artist_name) AS artist_id  -- We can assume that artist names are not repeated (it rarely does happen)
         , _row
         , date_load    
         , artist_name 
 FROM filtered_kh
 UNION 
 SELECT
-          distinct md5(artist_name) AS artist_id
+          distinct md5(artist_name) AS artist_id  -- We can assume that artist names are not repeated (it rarely does happen)
         , _row
         , date_load    
         , artist_name 
 FROM filtered_sah
 UNION 
 SELECT
-          distinct md5(artist_name) AS artist_id
+          distinct md5(artist_name) AS artist_id  -- We can assume that artist names are not repeated (it rarely does happen)
         , _row
         , date_load    
         , artist_name  
 FROM filtered_sah2
 UNION 
 SELECT
-          distinct md5(artist_name) AS artist_id
+          distinct md5(artist_name) AS artist_id  -- We can assume that artist names are not repeated (it rarely does happen)
         , _row
         , date_load    
         , artist_name 

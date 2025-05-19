@@ -55,9 +55,18 @@ models:
 
     
     silver: 
-      +materialized: view
       +database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_ICAROSPATH_DB"
       +schema: silver
+      albums__grouped:
+        +materialized: table
+      artists__grouped:
+        +materialized: table
+      listenings__grouped:
+        +materialized: table
+      tracks__grouped:
+        +materialized: table
+      users__grouped: 
+        +materialized: table
 
     gold:
       +materialized: table

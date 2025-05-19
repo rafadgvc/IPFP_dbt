@@ -11,9 +11,7 @@ WITH src_spotify_users AS (
 grouped_users AS (
     SELECT
           hashed_id
-        , username
-        , name
-        , email
+        , original_id
     FROM src_spotify_users
     )
 
