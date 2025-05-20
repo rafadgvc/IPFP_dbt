@@ -1,6 +1,6 @@
 {{
   config(
-    materialized='view'
+    materialized='table'
   )
 }}
 
@@ -8,29 +8,39 @@ WITH src_listenings_grouped AS (
     SELECT * 
     FROM {{ ref("listenings__grouped") }}
     ),
+src_listenings_grouped_id AS (
+    SELECT * 
+    FROM {{ ref("listenings__grouped_id") }}
+    ),
+
 
 filtered_lg AS (
     SELECT
-          listening_id
-        , _row
-        , uri
-        , ts::DATE AS date_id
-        , EXTRACT(HOUR FROM ts)::INT*60 + EXTRACT(MINUTE FROM ts)::INT AS time_id
-        , md5(platform) AS id_platform
-        , ms_played
+          slg.listening_id
+        , slgi._row
+        , slg.uri
+        , slg.ts::DATE AS date_id
+        , EXTRACT(HOUR FROM slg.ts)::INT*60 + EXTRACT(MINUTE FROM slg.ts)::INT AS time_id
+        , md5(slg.platform) AS id_platform
+        , slg.ms_played
         , CASE 
-            WHEN reason_start IS NOT NULL THEN md5(reason_start)
+            WHEN slg.reason_start IS NOT NULL THEN md5(slg.reason_start)
             ELSE md5('unknown')
             END  AS id_reason_start
         , CASE 
-            WHEN reason_end IS NOT NULL THEN md5(reason_end)
+            WHEN slg.reason_end IS NOT NULL THEN md5(slg.reason_end)
             ELSE md5('unknown')
             END  AS id_reason_end
-        , shuffle
-        , skipped
-        , hashed_user_id
-        , date_load
-    FROM src_listenings_grouped
+        , slg.shuffle
+        , slg.skipped
+        , slg.hashed_user_id
+        , slg.date_load
+    FROM 
+        src_listenings_grouped slg
+    JOIN
+        src_listenings_grouped_id slgi
+    ON 
+        slg.listening_id = slgi.listening_id
     )
 
 

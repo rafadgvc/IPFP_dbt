@@ -53,11 +53,27 @@ models:
           - relationships:
               field: hashed_id
               to: ref('base_users')
-
       - name: date_load
         tests:
           - not_null
           - values_after_may_2025
+    
+  - name: listenings_id
+    columns: 
+      - name: _row
+        tests:
+          - not_null
+          - positive_values
+      - name: listening_id
+        tests:
+          - not_null
+          - unique
+      - name: hashed_user_id
+        tests:
+          - not_null
+          - relationships:
+              field: hashed_id
+              to: ref('base_users')
 
   - name: tracks
     columns:

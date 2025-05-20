@@ -17,8 +17,7 @@ src_spotify_api_users AS (
 filtered_kh AS (
     SELECT
           
-          _row
-        , kh.uri
+          kh.uri
         , kh.ts
         , CASE                                                        -- iOS, mac and Google_Home could have been kept, but these values are very similar to 
             WHEN kh.platform IS NULL            THEN 'unknown'        -- (and very much less frequent values than) the ones they are converted to 
@@ -55,8 +54,7 @@ src_spotify_api_history AS (
 
 filtered_sah AS (
     SELECT
-          _row
-        , sah.uri
+          sah.uri
         , TS
         , CASE                                                         -- iOS, mac and Google_Home could have been kept, but these values are very similar to 
             WHEN sah.platform IS NULL            THEN 'unknown'        -- (and very much less frequent values than) the ones they are converted to 
@@ -93,8 +91,7 @@ src_spotify_api_history2 AS (
 
 filtered_sah2 AS (
     SELECT
-          _row
-        , sah.uri
+          sah.uri
         , TS
         , CASE                                                         -- iOS, mac and Google_Home could have been kept, but these values are very similar to 
             WHEN sah.platform IS NULL            THEN 'unknown'        -- (and very much less frequent values than) the ones they are converted to 

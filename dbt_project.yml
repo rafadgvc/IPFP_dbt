@@ -67,6 +67,10 @@ models:
         +materialized: table
       users__grouped: 
         +materialized: table
+      listenings__grouped_id:
+        +materialized: table
+      users__grouped_id: 
+        +materialized: table
 
     gold:
       +materialized: table

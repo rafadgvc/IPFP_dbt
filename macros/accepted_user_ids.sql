@@ -1,5 +1,6 @@
 {% test accepted_user_ids(model, column_name) %}
-
+ -- it should be noted that this test would 
+ -- have to be changed if new users were added
    select *
    from {{ model }}
    where {{ column_name }} NOT IN (   

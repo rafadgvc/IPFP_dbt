@@ -23,19 +23,15 @@ sources:
           loaded_at_field: _fivetran_synced
         description: "Listening habits of the users"
         columns:
-          - name: _row
-            data_type: int
-            description: "Number of each row in the Google Sheet"
-            tests:
-              - not_null
-              - positive_values
-
           - name: listening_id
             data_type: varchar
             description: "Identificator for a listening made by a user"
             tests:
               - not_null
               - unique
+              - relationships:
+                  field: listening_id
+                  to: ref('listenings__grouped_id')
           - name: uri
             data_type: varchar
             description: "Track URI to identify it in Spotify"
@@ -101,12 +97,44 @@ sources:
             description: "Hashed id of the user that listened to the track"
             tests: 
               - not_null
+              - relationships:
+                  field: hashed_id
+                  to: ref('users')
           - name: date_load
             data_type: timestamp_ntz
             description: "Date when the data was loaded in Snowflake"
             tests: 
               - not_null
               - values_after_may_2025
+      
+      - name: listenings__grouped_id
+        description: "Identifiers for the listening table"
+        tests: 
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - _row
+                - hashed_user_id
+        columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+            tests:
+              - not_null
+              - positive_values
+          - name: listening_id
+            data_type: varchar
+            description: "Identificator for a listening made by a user"
+            tests:
+              - not_null
+              - unique
+          - name: hashed_user_id
+            data_type: varchar
+            description: "Hashed id of the user that listened to the track"
+            tests: 
+              - not_null
+              - relationships:
+                  field: hashed_id
+                  to: ref('users')
 
       - name: tracks__grouped
         config:
@@ -200,15 +228,8 @@ sources:
       
       - name: users__grouped
         description: "Data corresponding to users"                          # Since users are hardcoded, their values should not be checked for freshness
-        columns:                                                            # Again, in a real case, this information would most likely come from the sources,
-            - name: original_id                                             # and be treated like the rest of the tables (since it would have a column to track this)
-              data_type: varchar
-              description: "Identifier for a user"
-              tests:
-                - unique
-                - not_null
-                - accepted_user_ids
-            - name: hashed_id
+        columns:                                                            # Again, in a real case, this information would most likely come from the sources,                                        
+            - name: hashed_id                                               # and be treated like the rest of the tables (since it would have a column to track this)
               data_type: varchar
               description: "Hashed identifier for a user"
               tests:
@@ -231,4 +252,25 @@ sources:
               tests:
                 - not_null
                 - unique
-            
+
+
+      - name: users__grouped_id
+        description: "identifiers for the users table"                      # Since users are hardcoded, their values should not be checked for freshness
+        columns:                                                            # Again, in a real case, this information would most likely come from the sources,
+            - name: original_id                                             # and be treated like the rest of the tables (since it would have a column to track this)
+              data_type: varchar
+              description: "Identifier for a user"
+              tests:
+                - unique
+                - not_null
+                - accepted_user_ids
+            - name: hashed_id
+              data_type: varchar
+              description: "Hashed identifier for a user"
+              tests:
+                - not_null
+                - unique
+                - relationships:
+                    field: hashed_id
+                    to: ref('users')
+                
