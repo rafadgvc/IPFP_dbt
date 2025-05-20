@@ -1,6 +1,6 @@
 {{
   config(
-    materialized='view'
+    materialized='table'
   )
 }}
 WITH src_listenings AS (
@@ -10,14 +10,12 @@ WITH src_listenings AS (
 
 listenings AS (
     SELECT
-          platform
+          reason_end
     FROM src_listenings
     )
 SELECT 
-      DISTINCT md5(platform) AS id_platform
-    , platform
+      DISTINCT md5(reason_end) AS id_reason_end
+    , reason_end
 FROM 
     listenings
-WHERE platform IS NOT NULL
-UNION ALL
-SELECT '9999', 'unknown'
+WHERE reason_end IS NOT NULL

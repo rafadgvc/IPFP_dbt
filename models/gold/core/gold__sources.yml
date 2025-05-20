@@ -3,7 +3,7 @@ version: 2
 sources:
 
   - name: gold
-    schema: gold
+    schema: core
     database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_ICAROSPATH_DB"
 
     quoting:
@@ -23,10 +23,21 @@ sources:
           - name: _row
             data_type: int
             description: "Number of each row in the Google Sheet"
+            tests:
+              - not_null
+              - positive_values
           - name: listening_id
             data_type: varchar
             description: "Identificator for a listening made by a user"
+            tests:
+              - not_null
+              - unique
           - name: uri
+            tests: 
+              - not_null
+              - relationships:
+                  field: track_id
+                  to: ref('dim_what')
             data_type: varchar
             description: "Track URI to identify it in Spotify"
           - name: date_id

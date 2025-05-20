@@ -1,0 +1,101 @@
+version: 2
+
+sources:
+
+  - name: marts
+    schema: marts
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_ICAROSPATH_DB"
+
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    
+
+    freshness:
+      warn_after: {count: 10, period: day}
+      error_after: {count: 20, period: day}
+    
+    tables:
+      - name: users_listened_minutes_by_month
+        description: "Use case for how many minutes has each user listened each month"
+        tests: 
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - username
+                - year
+                - month
+        columns: 
+          - name: username
+            data_type: varchar
+            description: "Username used in the platform by the user"
+            tests:
+              - not_null
+              - relationships:
+                  field: username
+                  to: ref('dim_who')
+          - name: year
+            data_type: int
+            description: "Year in which the listenings took place"
+            tests:
+              - not_null
+              - positive_values
+              - relationships:
+                  field: year
+                  to: ref('dim_when_date')
+          - name: month
+            data_type: int
+            description: "Month in which the listenings took place"
+            tests:
+              - not_null
+              - positive_values
+              - relationships:
+                  field: month
+                  to: ref('dim_when_date')
+          - name: total_listened_minutes
+            data_type: int
+            description: "Ammount of minutes listened"
+            tests:
+              - not_null
+              - positive_values
+      - name: users_listenings_by_month
+        description: "Use case for how many listenings has each user made each month"
+        tests: 
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - username
+                - year
+                - month
+        columns: 
+          - name: username
+            data_type: varchar
+            description: "Username used in the platform by the user"
+            tests:
+              - not_null
+              - relationships:
+                  field: username
+                  to: ref('dim_who')
+          - name: year
+            data_type: int
+            description: "Year in which the listenings took place"
+            tests:
+              - not_null
+              - positive_values
+              - relationships:
+                  field: year
+                  to: ref('dim_when_date')
+          - name: month
+            data_type: int
+            description: "Month in which the listenings took place"
+            tests:
+              - not_null
+              - positive_values
+              - relationships:
+                  field: month
+                  to: ref('dim_when_date')
+          - name: total_listenings
+            data_type: int
+            description: "Ammount of listenings made"
+            tests:
+              - not_null
+              - positive_values

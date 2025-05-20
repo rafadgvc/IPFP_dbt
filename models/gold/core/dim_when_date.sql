@@ -1,6 +1,6 @@
 {{
   config(
-    materialized='view'
+    materialized='table'
   )
 }}
 WITH sequenced_dates AS (
