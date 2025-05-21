@@ -144,3 +144,40 @@ sources:
             tests:
               - not_null
               - positive_values
+      
+      - name: users_most_active_moment_of_day
+        description: "Use case for at what momento of the day users have more listenings"
+        tests: 
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - username
+                - moment_of_day
+        columns: 
+          - name: username
+            data_type: varchar
+            description: "Username used in the platform by the user"
+            tests:
+              - not_null
+              - relationships:
+                  field: username
+                  to: ref('dim_who')
+          - name: moment_of_day
+            data_type: varchar
+            description: "Moment of the day in which the listening took place"
+            tests:
+              - not_null
+              - relationships:
+                  field: moment_of_day
+                  to: ref('dim_when_time')
+              - accepted_values:
+                  values:
+                    - "Morning"
+                    - "Midday"
+                    - "Evening"
+                    - "Night"
+          - name: total_listenings
+            data_type: int
+            description: "Ammount of listenings made"
+            tests:
+              - not_null
+              - positive_values

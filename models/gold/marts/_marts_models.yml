@@ -58,3 +58,22 @@ models:
         tests:
           - not_null
           - positive_values
+  
+  - name: users_most_active_moment_of_day
+    columns: 
+      - name: username
+        tests:
+          - not_null
+      - name: moment_of_day
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - "Morning"
+                - "Midday"
+                - "Evening"
+                - "Night"
+      - name: total_listenings
+        tests:
+          - not_null
+          - positive_values
