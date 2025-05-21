@@ -37,6 +37,45 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 models:
   my_new_project:
-    # Applies to all files under models/example/
-    example:
+    +transient: false
+    bronze: 
+      +database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_ICAROSPATH_DB"
+      google_sheets:
+        +schema: google_sheets
+        history_kaggle:
+          +materialized: table
+        history_self:
+          +materialized: table
+        history_artificial:
+          +materialized: table
+        tracks_data:
+          +materialized: table
+        users: 
+          +materialized: table
+
+    
+    silver: 
+      +database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_ICAROSPATH_DB"
+      +schema: silver
       +materialized: table
+
+    gold:
+      +database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_ICAROSPATH_DB"
+      core: 
+        +materialized: table
+        +schema: core
+      marts: 
+        +materialized: view
+        +schema: marts
+
+
+
+tests: 
+  +severity: warn
+
+snapshots:
+  +transient: false
+  +target_database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_ICAROSPATH_DB"
+  +target_schema: snapshots
+
+      

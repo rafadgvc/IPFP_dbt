@@ -1,0 +1,229 @@
+version: 2
+
+
+models: 
+  - name: history_kaggle
+    columns: 
+      - name: _row
+        tests:
+          - not_null
+          - unique
+          - positive_values
+      - name: uri
+        tests: 
+          - not_null
+      - name: ts 
+        tests:
+          - not_null
+      - name: platform
+        tests: 
+          - not_null
+      - name: ms_played
+        tests: 
+          - not_null
+          - positive_values
+      - name: track_name
+        tests:
+          - not_null
+      - name: artist_name
+        tests:
+          - not_null
+      - name: album_name
+        tests:
+          - not_null
+      - name: reason_start
+        tests:
+          - not_null
+      - name: reason_end
+        tests:
+          - not_null
+      - name: shuffle
+        tests: 
+          - not_null
+      - name: date_load
+        tests:
+          - not_null
+          - values_after_may_2025
+
+  - name: tracks_data
+    columns: 
+      - name: _row
+        tests:
+          - not_null
+          - unique
+          - positive_values
+      - name: valence
+        tests: 
+          - not_null
+      - name: year
+        tests: 
+          - not_null
+      - name: acousticness
+        tests: 
+          - not_null
+      - name: artists
+        tests: 
+          - not_null
+      - name: danceability
+        tests: 
+          - not_null
+      - name: duration_ms
+        tests: 
+          - not_null
+      - name: energy
+        tests: 
+          - not_null
+      - name: explicit
+        tests: 
+          - not_null
+      - name: id
+        tests: 
+          - not_null
+          - unique
+      - name: instrumentalness
+        tests: 
+          - not_null
+      - name: key
+        tests: 
+          - not_null
+      - name: liveness
+        tests: 
+          - not_null
+      - name: loudness
+        tests: 
+          - not_null
+      - name: mode
+        tests: 
+          - not_null
+      - name: name
+        tests: 
+          - not_null
+      - name: popularity
+        tests: 
+          - not_null
+      - name: release_date
+        tests: 
+          - not_null
+      - name: speechiness
+        tests: 
+          - not_null
+      - name: tempo
+        tests: 
+          - not_null
+      - name: date_load
+        tests:
+          - not_null
+          - values_after_may_2025
+
+  - name: history_self
+    columns:
+      - name: _row
+        tests:
+          - not_null
+          - unique 
+          - positive_values
+      - name: uri
+        tests: 
+          - not_null
+      - name: ts 
+        tests:
+          - not_null
+      - name: platform
+        tests: 
+          - not_null
+      - name: ms_played
+        tests: 
+          - not_null
+          - positive_values
+      - name: track_name
+        tests:
+          - not_null
+      - name: artist_name
+        tests:
+          - not_null
+      - name: album_name
+        tests:
+          - not_null
+      - name: reason_start
+        tests:
+          - not_null
+      - name: reason_end
+        tests:
+          - not_null
+      - name: shuffle
+        tests: 
+          - not_null
+      - name: date_load
+        tests:
+          - not_null
+          - values_after_may_2025
+
+  - name: history_artificial
+    columns: 
+      - name: _row
+        tests:
+          - not_null
+          - unique
+          - positive_values
+      - name: uri
+        tests: 
+          - not_null
+      - name: ts 
+        tests:
+          - not_null
+      - name: platform
+        tests: 
+          - not_null
+      - name: ms_played
+        tests: 
+          - not_null
+          - positive_values
+      - name: track_name
+        tests:
+          - not_null
+      - name: artist_name
+        tests:
+          - not_null
+      - name: album_name
+        tests:
+          - not_null
+      - name: reason_start
+        tests:
+          - not_null
+      - name: reason_end
+        tests:
+          - not_null
+      - name: shuffle
+        tests: 
+          - not_null
+      - name: date_load
+        tests:
+          - not_null
+          - values_after_may_2025
+
+  - name: base_users
+    columns: 
+      - name: original_id
+        tests:
+          - unique
+          - not_null
+          - accepted_user_ids
+      - name: hashed_id
+        tests:
+          - not_null
+      - name: username
+        tests:
+          - not_null
+      - name: name
+        tests:
+          - not_null
+      - name: email
+        tests:
+          - not_null
+      
+    
+      
+      
+        
+          
+            

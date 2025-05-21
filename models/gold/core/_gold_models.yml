@@ -1,0 +1,216 @@
+version: 2
+
+
+models: 
+  - name: fct_listenings
+    columns: 
+      - name: _row
+        tests:
+          - not_null
+          - positive_values
+      - name: listening_id
+        tests:
+          - not_null
+          - unique
+      - name: uri
+        tests: 
+          - not_null
+          - relationships:
+              field: track_id
+              to: ref('dim_what')
+      - name: date_id
+        tests: 
+          - not_null
+          - relationships:
+              field: date_id
+              to: ref('dim_when_date')
+      - name: time_id
+        tests: 
+          - not_null
+          - positive_values
+          - relationships:
+              field: time_id
+              to: ref('dim_when_time')
+      - name: id_platform
+        tests: 
+          - not_null
+          - relationships:
+              field: id_platform
+              to: ref('dim_where')
+      - name: ms_played
+        tests: 
+          - not_null
+          - values_above_5000
+      - name: id_reason_start
+        tests: 
+          - not_null
+          - relationships:
+              field: id_reason_start
+              to: ref('dim_why_started')
+      - name: id_reason_end
+        tests: 
+          - not_null
+          - relationships:
+              field: id_reason_end
+              to: ref('dim_why_ended')
+      - name: shuffle
+        tests: 
+          - not_null
+      - name: skipped
+        tests: 
+          - not_null
+      - name: hashed_user_id
+        tests: 
+          - not_null
+          - relationships:
+              field: hashed_id
+              to: ref('dim_who')
+      - name: date_load
+        tests:
+          - not_null
+          - values_after_may_2025
+
+  - name: dim_why_started
+    columns: 
+      - name: id_reason_start
+        tests: 
+          - not_null
+          - unique
+      - name: reason_start
+        tests: 
+          - not_null
+          - unique
+          - accepted_starting_reasons
+
+  - name: dim_why_ended
+    columns: 
+      - name: id_reason_end
+        tests: 
+          - not_null
+          - unique
+      - name: reason_end
+        tests: 
+          - not_null
+          - unique
+          - accepted_ending_reasons
+
+  - name: dim_who
+    columns: 
+      - name: original_id
+        tests: 
+          - not_null
+          - unique
+          - accepted_user_ids
+      - name: hashed_id
+        tests: 
+          - not_null
+          - unique
+      - name: username
+        tests: 
+          - not_null
+          - unique
+      - name: name
+        tests: 
+          - not_null
+      - name: email
+        tests: 
+          - not_null
+          - unique
+
+  - name: dim_where
+    columns: 
+      - name: id_platform
+        tests: 
+          - not_null
+          - unique
+      - name: platform
+        tests: 
+          - not_null
+          - unique
+          - accepted_platforms
+
+  - name: dim_when_time
+    columns: 
+      - name: time_id
+        tests: 
+          - not_null
+          - unique
+      - name: hour
+        tests: 
+          - not_null
+          - positive_values
+      - name: minute
+        tests: 
+          - not_null
+          - positive_values
+      - name: formatted_time
+        tests: 
+          - not_null
+      - name: moment_of_day
+        tests: 
+          - not_null
+          - accepted_values:
+              values:
+                - "Morning"
+                - "Midday"
+                - "Evening"
+                - "Night"
+
+  - name: dim_when_date
+    columns: 
+      - name: date_id
+        tests: 
+          - not_null
+          - unique
+          - values_after_2008
+      - name: year
+        tests: 
+          - not_null
+          - positive_values
+      - name: month
+        tests: 
+          - not_null
+          - positive_values
+          - values_below_13
+      - name: month_name
+        tests: 
+          - not_null
+      - name: day
+        tests: 
+          - not_null
+          - positive_values
+      - name: number_week_day
+        tests: 
+          - not_null
+          - positive_values
+          - values_below_7
+      - name: week_day
+        tests: 
+          - not_null
+      - name: quarter
+        tests: 
+          - not_null
+          - positive_values
+
+  - name: dim_what
+    columns: 
+      - name: track_name
+        tests: 
+          - not_null
+      - name: track_id
+        tests: 
+          - not_null
+          - unique
+      - name: album_name
+        tests: 
+          - not_null
+      - name: album_id
+        tests: 
+          - not_null
+      - name: artist_name
+        tests: 
+          - not_null
+      - name: artist_id
+        tests: 
+          - not_null
+    

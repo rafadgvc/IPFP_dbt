@@ -1,0 +1,323 @@
+version: 2
+
+sources:
+
+  - name: gold
+    schema: core
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_ICAROSPATH_DB"
+
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    
+
+    freshness:
+      warn_after: {count: 10, period: day}
+      error_after: {count: 20, period: day}
+    
+    tables:
+      - name: fct_listenings
+        description: "Facts with the listening habits of the users"
+        columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+            tests:
+              - not_null
+              - positive_values
+          - name: listening_id
+            data_type: varchar
+            description: "Identificator for a listening made by a user"
+            tests:
+              - not_null
+              - unique
+          - name: uri
+            tests: 
+              - not_null
+              - relationships:
+                  field: track_id
+                  to: ref('dim_what')
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+          - name: date_id
+            data_type: int
+            description: "Date identifier in which the listening took place"
+            tests: 
+              - not_null
+              - relationships:
+                  field: date_id
+                  to: ref('dim_when_date')
+          - name: time_id
+            data_type: int
+            description: "Time identifier in which the listening took place"
+            tests: 
+              - not_null
+              - positive_values
+              - relationships:
+                  field: time_id
+                  to: ref('dim_when_time')
+          - name: id_platform
+            data_type: varchar
+            description: "Platform identifier in which the listening took place"
+            tests: 
+              - not_null
+              - relationships:
+                  field: id_platform
+                  to: ref('dim_where')
+          - name: ms_played
+            data_type: int
+            description: "Miliseconds that the listening lasted"
+            tests: 
+              - not_null
+              - values_above_5000
+          - name: id_reason_start
+            data_type: varchar
+            description: "Identifier for why the track started playing"
+            tests: 
+              - not_null
+              - relationships:
+                  field: id_reason_start
+                  to: ref('dim_why_started')
+          - name: id_reason_end
+            data_type: varchar
+            description: "Identifier for why the track stopped playing"
+            tests: 
+              - not_null
+              - relationships:
+                  field: id_reason_end
+                  to: ref('dim_why_ended')
+          - name: shuffle
+            data_type: boolean
+            description: "Wether, in the beginning of the listening, shuffle was activated"
+            tests: 
+              - not_null
+          - name: skipped
+            data_type: boolean
+            description: "Wether the track was skipped"
+            tests: 
+              - not_null
+          - name: hashed_user_id
+            data_type: varchar
+            description: "Hashed id of the user that listened to the track"
+            tests: 
+              - not_null
+              - relationships:
+                  field: hashed_id
+                  to: ref('dim_who')
+          - name: date_load
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
+            tests:
+              - not_null
+              - values_after_may_2025
+
+      - name: dim_why_started
+        description: "Data corresponding to the Why Started Dimension"
+        columns: 
+          - name: id_reason_start
+            data_type: varchar
+            description: "Identifier for the reason why it started"    
+            tests: 
+              - not_null
+              - unique
+          - name: reason_start
+            data_type: varchar
+            description: "Why it started"
+            tests: 
+              - not_null
+              - unique
+              - accepted_starting_reasons
+
+      - name: dim_why_ended
+        description: "Data corresponding to the Why Ended Dimension"
+        columns: 
+          - name: id_reason_end
+            data_type: varchar
+            description: "Identifier for the reason why it ended"
+            tests: 
+              - not_null
+              - unique
+          - name: reason_start
+            data_type: varchar
+            description: "Why it started"
+            tests: 
+              - not_null
+              - unique
+              - accepted_ending_reasons
+      
+      - name: dim_who
+        description: "Data corresponding to the Who Dimmension, that represents users"
+        columns: 
+            - name: original_id
+              data_type: varchar
+              description: "Identifier for a user"
+              tests: 
+                - not_null
+                - unique
+                - accepted_user_ids
+            - name: hashed_id
+              data_type: varchar
+              description: "Hashed identifier for a user"
+              tests: 
+                - not_null
+                - unique
+            - name: username
+              data_type: varchar
+              description: "Username used in the platform by the user"
+              tests: 
+                - not_null
+                - unique
+            - name: name
+              data_type: varchar
+              description: "Full name of the user"
+              tests: 
+                - not_null
+            - name: email
+              data_type: varchar
+              description: "Email used by the user in the platform"
+              tests: 
+                - not_null
+                - unique
+
+      - name: dim_where
+        description: "Data corresponding to the Where Dimension, that represents paltforms of listenings"
+        columns: 
+          - name: id_platform
+            data_type: varchar
+            description: "Platform identifier in which the listening took place"
+            tests: 
+              - not_null
+              - unique
+          - name: platform
+            data_type: varchar
+            description: "Platform in which the listening took place"
+            tests: 
+              - not_null
+              - unique
+              - accepted_platforms
+
+      - name: dim_when_date
+        description: "Data corresponding to the When Date Dimension, which represents which day the listenings took place"
+        columns: 
+          - name: date_id
+            data_type: varchar
+            description: "Date identifier in which the listening took place"
+            tests: 
+              - not_null
+              - unique
+              - values_after_2008
+          - name: year
+            data_type: int
+            description: "Year in which the listening took place"
+            tests: 
+              - not_null
+              - positive_values
+          - name: month
+            data_type: int
+            description: "Number of month in which the listening took place"
+            tests: 
+              - not_null
+              - positive_values
+              - values_below_13
+          - name: month_name
+            data_type: varchar
+            description: "Name of the month in which the listening took place"
+          - name: day
+            data_type: int
+            description: "Number of the day in the month in which the listening took place"
+            tests: 
+              - not_null
+              - positive_values
+          - name: number_week_day
+            data_type: int
+            description: "Number of the day in the week in which the listening took place"
+            tests: 
+              - not_null
+              - positive_values
+              - values_below_7
+          - name: week_day
+            data_type: varchar
+            description: "Name of the day in the week in which the listening took place"
+            tests: 
+              - not_null
+          - name: quarter
+            data_type: int
+            description: "Quarter of the year in which the listening took place"
+            tests: 
+              - not_null
+              - positive_values
+
+      - name: dim_when_time
+        description: "Data corresponding to the When Date Dimension, which represents which day the listenings took place"
+        columns: 
+          - name: time_id
+            data_type: varchar
+            description: "Time identifier in which the listening took place"
+            tests: 
+              - not_null
+              - positive_values
+              - unique
+          - name: hour
+            data_type: int
+            description: "Hour in which the listening took place"
+            tests: 
+              - not_null
+              - positive_values
+          - name: minute
+            data_type: int
+            description: "Minute in which the listening took place"
+            tests: 
+              - not_null
+              - positive_values
+          - name: formatted_time
+            data_type: varchar
+            description: "Time formatted as 'HH:MM' in which the listening took place"
+            tests: 
+              - not_null
+          - name: moment_of_day
+            data_type: int
+            description: "Moment of the day in which the listening took place"
+            tests: 
+              - not_null
+              - accepted_values:
+                  values:
+                    - "Morning"
+                    - "Midday"
+                    - "Evening"
+                    - "Night"
+  
+      - name: dim_what
+        description: "Data corresponding to the What dimension, that represents tracks"
+        columns: 
+          - name: uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+            tests: 
+              - not_null
+              - unique
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+            tests: 
+              - not_null
+          - name: album_id
+            data_type: varchar
+            description: "Identifier for an album"
+            tests: 
+              - not_null
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album"
+            tests: 
+              - not_null
+          - name: artist_id
+            data_type: varchar
+            description: "Identifier for an artist"
+            tests: 
+              - not_null
+          - name: artist_name
+            data_type: varchar
+            description: "Name of the artist"
+            tests: 
+              - not_null

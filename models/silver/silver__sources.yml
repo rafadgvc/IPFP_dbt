@@ -1,0 +1,276 @@
+version: 2
+
+sources:
+
+  - name: silver
+    schema: silver
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_ICAROSPATH_DB"
+
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    
+
+    freshness:
+      warn_after: {count: 10, period: day}
+      error_after: {count: 20, period: day}
+
+    tables:
+      - name: listenings__grouped
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
+        description: "Listening habits of the users"
+        columns:
+          - name: listening_id
+            data_type: varchar
+            description: "Identificator for a listening made by a user"
+            tests:
+              - not_null
+              - unique
+              - relationships:
+                  field: listening_id
+                  to: ref('listenings__grouped_id')
+          - name: uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+            tests: 
+              - not_null
+          - name: ts
+            data_type: timestamp_ntz
+            description: "Date and time in which the listening was done"
+            tests: 
+              - not_null
+              - values_after_2008
+          - name: platform
+            data_type: varchar
+            description: "Platform in which the listening took place"
+            tests: 
+              - not_null
+              - accepted_platforms
+          - name: ms_played
+            data_type: int
+            description: "Miliseconds that the listening lasted"
+            tests: 
+              - not_null
+              - values_above_5000
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+            tests: 
+              - not_null
+          - name: artist_name
+            data_type: varchar
+            description: "Name of the main artist that made the song"
+            tests: 
+              - not_null
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album that the song belongs to"
+            tests: 
+              - not_null
+          - name: reason_start
+            data_type: varchar
+            description: "Why the track started playing"
+            tests: 
+              - not_null
+              - accepted_starting_reasons
+          - name: reason_end
+            data_type: varchar
+            description: "Why the track stopped playing"
+            tests: 
+              - not_null
+              - accepted_ending_reasons
+          - name: shuffle
+            data_type: boolean
+            description: "Wether, in the beginning of the listening, shuffle was activated"
+            tests: 
+              - not_null
+          - name: skipped
+            data_type: boolean
+            description: "Wether the track was skipped"
+            tests: 
+              - not_null
+          - name: hashed_user_id
+            data_type: varchar
+            description: "Hashed id of the user that listened to the track"
+            tests: 
+              - not_null
+              - relationships:
+                  field: hashed_id
+                  to: ref('users')
+          - name: date_load
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
+            tests: 
+              - not_null
+              - values_after_may_2025
+      
+      - name: listenings__grouped_id
+        description: "Identifiers for the listening table"
+        tests: 
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - _row
+                - hashed_user_id
+        columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+            tests:
+              - not_null
+              - positive_values
+          - name: listening_id
+            data_type: varchar
+            description: "Identificator for a listening made by a user"
+            tests:
+              - not_null
+              - unique
+          - name: hashed_user_id
+            data_type: varchar
+            description: "Hashed id of the user that listened to the track"
+            tests: 
+              - not_null
+              - relationships:
+                  field: hashed_id
+                  to: ref('users')
+
+      - name: tracks__grouped
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
+        description: "Data corresponding to tracks"
+        columns: 
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+            tests:
+              - not_null
+              - positive_values
+          - name: uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+            tests:
+              - not_null
+              - unique
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+            tests:
+              - not_null
+          - name: date_load
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
+            tests: 
+              - not_null
+              - values_after_may_2025
+
+      - name: albums__grouped
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
+        description: "Data corresponding to albums, EPs and singles"
+        columns: 
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+            tests:
+              - not_null
+              - positive_values
+          - name: album_id
+            data_type: varchar
+            description: "Identifier for an album"
+            tests:
+              - not_null
+              - unique
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album"
+            tests:
+              - not_null
+          - name: date_load
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
+            tests: 
+              - not_null
+              - values_after_may_2025
+      
+      - name: artists__grouped
+        config:
+          event_time: _fivetran_synced
+          loaded_at_field: _fivetran_synced
+        description: "Data corresponding to artists"
+        columns: 
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+            tests:
+              - not_null
+              - positive_values
+          - name: artist_id
+            data_type: varchar
+            description: "Identifier for an artist"
+            tests:
+              - not_null
+              - unique
+          - name: artist_name
+            data_type: varchar
+            description: "Name of the artist"
+            tests:
+              - not_null
+          - name: date_load
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
+            tests: 
+              - not_null
+              - values_after_may_2025
+      
+      - name: users__grouped
+        description: "Data corresponding to users"                          # Since users are hardcoded, their values should not be checked for freshness
+        columns:                                                            # Again, in a real case, this information would most likely come from the sources,                                        
+            - name: hashed_id                                               # and be treated like the rest of the tables (since it would have a column to track this)
+              data_type: varchar
+              description: "Hashed identifier for a user"
+              tests:
+                - not_null
+                - unique
+            - name: username
+              data_type: varchar
+              description: "Username used in the platform by the user"
+              tests:
+                - not_null
+                - unique
+            - name: name
+              data_type: varchar
+              description: "Full name of the user"
+              tests:
+                - not_null
+            - name: email
+              data_type: varchar
+              description: "Email used by the user in the platform"
+              tests:
+                - not_null
+                - unique
+
+
+      - name: users__grouped_id
+        description: "identifiers for the users table"                      # Since users are hardcoded, their values should not be checked for freshness
+        columns:                                                            # Again, in a real case, this information would most likely come from the sources,
+            - name: original_id                                             # and be treated like the rest of the tables (since it would have a column to track this)
+              data_type: varchar
+              description: "Identifier for a user"
+              tests:
+                - unique
+                - not_null
+                - accepted_user_ids
+            - name: hashed_id
+              data_type: varchar
+              description: "Hashed identifier for a user"
+              tests:
+                - not_null
+                - unique
+                - relationships:
+                    field: hashed_id
+                    to: ref('users')
+                

@@ -1,0 +1,358 @@
+version: 2
+
+sources:
+
+  # data will be obtained from the google_sheets schema in the RAFAELDELGADO_DEV_BRONZE_ICAROSPATH_DB/RAFAELDELGADO_PRO_BRONZE_ICAROSPATH_DB database
+  - name: google_sheets
+    schema: google_sheets
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_ICAROSPATH_DB"
+
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    
+    # on a real case, docs sources should be updated to every 6 hours or less, depending on how often source google sheets were updated
+    # which means that, if data was synced i.e. every 6 hours, freshness should be about 12 hours for a warning and 24 hours for an error
+    freshness:
+      warn_after: {count: 10, period: day}
+      error_after: {count: 20, period: day}
+
+    tables:
+      - name: history_kaggle
+        config:
+          event_time: _fivetran_synced                                    # This allows the freshness to be established through the _fivetran_synced column
+          loaded_at_field: _fivetran_synced
+        description: "History of the first user's listening habits"
+        tests: 
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - spotify_track_uri
+                - ts
+                - _row
+                - _fivetran_synced
+        columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+            tests:
+              - not_null
+              - unique
+              - positive_values
+          - name: spotify_track_uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+            tests: 
+              - not_null
+          - name: ts
+            data_type: timestamp_ntz
+            description: "Date and time in which the listening was done"
+            tests: 
+              - not_null
+          - name: platform
+            data_type: varchar
+            description: "Platform in which the listening took place"
+            tests: 
+              - not_null
+          - name: ms_played
+            data_type: int
+            description: "Miliseconds that the listening lasted"
+            tests: 
+              - not_null
+              - positive_values
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+            tests: 
+              - not_null
+          - name: artist_name
+            data_type: varchar
+            description: "Name of the main artist that made the song"
+            tests: 
+              - not_null
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album that the song belongs to"
+            tests: 
+              - not_null
+          - name: reason_start
+            data_type: varchar
+            description: "Why the track started playing"
+          - name: reason_end
+            data_type: varchar
+            description: "Why the track stopped playing"
+          - name: shuffle
+            data_type: boolean
+            description: "Wether, in the beginning of the listening, shuffle was activated"
+            tests: 
+              - not_null
+          - name: skipped
+            data_type: boolean
+            description: "Wether the track was skipped"
+            tests: 
+              - not_null
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
+            tests:
+              - not_null
+              - values_after_may_2025
+
+      - name: songs_data
+        config:
+          event_time: _fivetran_synced                                    # This allows the freshness to be established through the _fivetran_synced column                                    
+          loaded_at_field: _fivetran_synced
+        description: "Data corresponding to tracks"
+        columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+            tests:
+              - not_null
+              - unique
+              - positive_values
+          - name: valence
+            data_type: varchar
+            description: "How positive the track is"
+          - name: year
+            data_type: varchar
+            description: "Year in which the track was released"
+          - name: acousticness
+            data_type: varchar
+            description: "How acoustic the track is"
+          - name: artists
+            data_type: varchar
+            description: "Artists credited to the track"
+          - name: danceability
+            data_type: varchar
+            description: "How danceable the track is"
+          - name: duration_ms
+            data_type: varchar
+            description: "Duration of the track in miliseconds"
+          - name: energy
+            data_type: varchar
+            description: "How energetic the track is"
+          - name: explicit
+            data_type: varchar
+            description: "Wether the track contains explicit content"
+          - name: id
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+          - name: instrumentalness
+            data_type: varchar
+            description: "How instrumental the track is"
+          - name: key
+            data_type: varchar
+            description: "Key in which the track is created"
+          - name: liveness
+            data_type: varchar
+            description: "How much audience the track is"
+          - name: loudness
+            data_type: varchar
+            description: "How loud the track is"
+          - name: mode
+            data_type: varchar
+            description: "Wether the track is in major or minor"
+          - name: name
+            data_type: varchar
+            description: "Name of the track"
+          - name: popularity
+            data_type: varchar
+            description: "How popular the track is"
+          - name: realease_date
+            data_type: varchar
+            description: "Date in which the track was released"
+          - name: speechiness
+            data_type: varchar
+            description: "How much presence of spoken words the track has"
+          - name: tempo
+            data_type: varchar
+            description: "Tempo of the track"
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
+            tests:
+              - not_null
+              - values_after_may_2025
+
+      - name: history_self
+        config:
+          event_time: _fivetran_synced                                    # This allows the freshness to be established through the _fivetran_synced column
+          loaded_at_field: _fivetran_synced
+        description: "History of the second user's listening habits"
+        tests: 
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - spotify_track_uri
+                - ts
+                - _row
+                - _fivetran_synced
+        columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+            tests:
+              - not_null
+              - unique
+              - positive_values
+          - name: spotify_track_uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+          - name: ts
+            data_type: timestamp_ntz
+            description: "Date and time in which the listening was done"
+            tests: 
+              - not_null
+          - name: platform
+            data_type: varchar
+            description: "Platform in which the listening took place"
+            tests: 
+              - not_null
+          - name: ms_played
+            data_type: int
+            description: "Miliseconds that the listening lasted"
+            tests: 
+              - not_null
+              - positive_values
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+            tests: 
+              - not_null
+          - name: artist_name
+            data_type: varchar
+            description: "Name of the main artist that made the song"
+            tests: 
+              - not_null
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album that the song belongs to"
+            tests: 
+              - not_null
+          - name: reason_start
+            data_type: varchar
+            description: "Why the track started playing"
+            tests: 
+              - not_null
+          - name: reason_end
+            data_type: varchar
+            description: "Why the track stopped playing"
+            tests: 
+              - not_null
+          - name: shuffle
+            data_type: boolean
+            description: "Wether, in the beginning of the listening, shuffle was activated"
+            tests: 
+              - not_null
+          - name: skipped
+            data_type: boolean
+            description: "Wether the track was skipped"
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
+            tests:
+              - not_null
+              - values_after_may_2025
+      
+      - name: history_artificial
+        config:
+          event_time: _fivetran_synced                                    # This allows the freshness to be established through the _fivetran_synced column
+          loaded_at_field: _fivetran_synced
+        description: "History of the artificial user's listening habits"
+        tests: 
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - spotify_track_uri
+                - ts
+                - _row
+                - _fivetran_synced
+        columns:
+          - name: _row
+            data_type: int
+            description: "Number of each row in the Google Sheet"
+            tests:
+              - not_null
+              - unique
+              - positive_values
+          - name: spotify_track_uri
+            data_type: varchar
+            description: "Track URI to identify it in Spotify"
+            tests: 
+              - not_null
+          - name: ts
+            data_type: timestamp_ntz
+            description: "Date and time in which the listening was done"
+            tests: 
+              - not_null
+          - name: platform
+            data_type: varchar
+            description: "Platform in which the listening took place"
+            tests: 
+              - not_null
+          - name: ms_played
+            data_type: int
+            description: "Miliseconds that the listening lasted"
+            tests: 
+              - not_null
+              - positive_values
+          - name: track_name
+            data_type: varchar
+            description: "Name of the track"
+            tests: 
+              - not_null
+          - name: artist_name
+            data_type: varchar
+            description: "Name of the main artist that made the song"
+            tests: 
+              - not_null
+          - name: album_name
+            data_type: varchar
+            description: "Name of the album that the song belongs to"
+            tests: 
+              - not_null
+          - name: reason_start
+            data_type: varchar
+            description: "Why the track started playing"
+            tests: 
+              - not_null
+          - name: reason_end
+            data_type: varchar
+            description: "Why the track stopped playing"
+            tests: 
+              - not_null
+          - name: shuffle
+            data_type: boolean
+            description: "Wether, in the beginning of the listening, shuffle was activated"
+            tests: 
+              - not_null
+          - name: skipped
+            data_type: boolean
+            description: "Wether the track was skipped"
+            tests: 
+              - not_null
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+            description: "Date when the data was loaded in Snowflake"
+            tests:
+              - not_null
+              - values_after_may_2025
+      
+      - name: users
+        description: "Data corresponding to users"                          # Since users are hardcoded, their values should not be checked for freshness
+        columns:                                                            # Again, in a real case, this information would most likely come from the sources,
+            - name: original_id                                             # and be treated like the rest of the tables (since it would have a column to track this)
+              data_type: varchar
+              description: "Identifier for a user"
+            - name: hashed_id
+              data_type: varchar
+              description: "Hashed identifier for a user"
+            - name: username
+              data_type: varchar
+              description: "Username used in the platform by the user"
+            - name: name
+              data_type: varchar
+              description: "Full name of the user"
+            - name: email
+              data_type: varchar
+              description: "Email used by the user in the platform"
+

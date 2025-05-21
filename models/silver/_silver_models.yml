@@ -1,0 +1,160 @@
+version: 2
+
+
+models: 
+  - name: listenings
+    columns: 
+      - name: _row
+        tests:
+          - not_null
+          - positive_values
+      - name: listening_id
+        tests:
+          - not_null
+          - unique
+      - name: uri
+        tests: 
+          - not_null
+      - name: ts 
+        tests:
+          - not_null
+          - values_after_2008
+      - name: platform
+        tests: 
+          - not_null
+          - accepted_platforms
+      - name: ms_played
+        tests: 
+          - not_null
+          - values_above_5000
+      - name: track_name
+        tests:
+          - not_null
+      - name: artist_name
+        tests:
+          - not_null
+      - name: album_name
+        tests:
+          - not_null
+      - name: reason_start
+        tests:
+          - not_null
+          - accepted_starting_reasons
+      - name: reason_end
+        tests:
+          - not_null
+          - accepted_ending_reasons
+      - name: shuffle
+        tests: 
+          - not_null
+      - name: hashed_user_id
+        tests:
+          - not_null
+          - relationships:
+              field: hashed_id
+              to: ref('base_users')
+      - name: date_load
+        tests:
+          - not_null
+          - values_after_may_2025
+    
+  - name: listenings_id
+    columns: 
+      - name: _row
+        tests:
+          - not_null
+          - positive_values
+      - name: listening_id
+        tests:
+          - not_null
+          - unique
+      - name: hashed_user_id
+        tests:
+          - not_null
+          - relationships:
+              field: hashed_id
+              to: ref('base_users')
+
+  - name: tracks
+    columns:
+      - name: _row
+        tests:
+          - not_null
+          - positive_values
+      - name: uri
+        tests:
+          - not_null
+          - unique
+      - name: name
+        tests:
+          - not_null
+      - name: date_load
+        tests:
+          - not_null
+          - values_after_may_2025
+  
+  - name: albums
+    columns:
+      - name: _row
+        tests:
+          - not_null
+          - positive_values
+      - name: album_id
+        tests:
+          - not_null
+          - unique
+      - name: album_name
+        tests:
+          - not_null
+      - name: date_load
+        tests:
+          - not_null
+          - values_after_may_2025
+  
+  - name: artists
+    columns:
+      - name: _row
+        tests:
+          - not_null
+          - positive_values
+      - name: artist_id
+        tests:
+          - not_null
+          - unique
+      - name: artist_name
+        tests:
+          - not_null
+      - name: date_load
+        tests:
+          - not_null
+          - values_after_may_2025
+  
+  - name: users
+    columns: 
+      - name: hashed_id
+        tests: 
+          - not_null 
+      - name: username
+        tests:
+          - not_null
+      - name: name
+        tests:
+          - not_null
+      - name: email
+        tests:
+          - not_null
+  
+  - name: users_id
+    columns: 
+      - name: original_id
+        tests: 
+          - not_null 
+          - unique 
+          - accepted_user_ids
+      - name: hashed_id
+        tests: 
+          - not_null 
+          - unique
+          - relationships:
+              field: hashed_id
+              to: ref('base_users')

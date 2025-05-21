@@ -1,0 +1,79 @@
+version: 2
+
+
+models: 
+  - name: users_listened_minutes_by_month
+    columns: 
+      - name: username
+        tests:
+          - not_null
+      - name: year
+        tests:
+          - not_null
+          - positive_values
+      - name: month
+        tests:
+          - not_null
+          - positive_values
+          - values_below_13
+      - name: total_listened_minutes
+        tests:
+          - not_null
+          - positive_values
+
+  - name: users_listenings_by_month
+    columns: 
+      - name: username
+        tests:
+          - not_null
+      - name: year
+        tests:
+          - not_null
+          - positive_values
+      - name: month
+        tests:
+          - not_null
+          - positive_values
+          - values_below_13
+      - name: total_listenings
+        tests:
+          - not_null
+          - positive_values
+
+  - name: most_listened_artists_by_month
+    columns: 
+      - name: artist_name
+        tests:
+          - not_null
+      - name: year
+        tests:
+          - not_null
+          - positive_values
+      - name: month
+        tests:
+          - not_null
+          - positive_values
+          - values_below_13
+      - name: total_listenings
+        tests:
+          - not_null
+          - positive_values
+  
+  - name: users_most_active_moment_of_day
+    columns: 
+      - name: username
+        tests:
+          - not_null
+      - name: moment_of_day
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - "Morning"
+                - "Midday"
+                - "Evening"
+                - "Night"
+      - name: total_listenings
+        tests:
+          - not_null
+          - positive_values
