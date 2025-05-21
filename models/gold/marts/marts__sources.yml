@@ -49,6 +49,7 @@ sources:
             tests:
               - not_null
               - positive_values
+              - values_below_13
               - relationships:
                   field: month
                   to: ref('dim_when_date')
@@ -90,6 +91,50 @@ sources:
             tests:
               - not_null
               - positive_values
+              - values_below_13
+              - relationships:
+                  field: month
+                  to: ref('dim_when_date')
+          - name: total_listenings
+            data_type: int
+            description: "Ammount of listenings made"
+            tests:
+              - not_null
+              - positive_values
+
+      - name: most_listened_artists_by_month
+        description: "Use case for how many listenings has each user made each month"
+        tests: 
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - artist_name
+                - year
+                - month
+        columns: 
+          - name: artist_name
+            data_type: varchar
+            description: "Artist name"
+            tests:
+              - not_null
+              - relationships:
+                  field: artist_name
+                  to: ref('dim_what')
+          - name: year
+            data_type: int
+            description: "Year in which the listenings took place"
+            tests:
+              - not_null
+              - positive_values
+              - relationships:
+                  field: year
+                  to: ref('dim_when_date')
+          - name: month
+            data_type: int
+            description: "Month in which the listenings took place"
+            tests:
+              - not_null
+              - positive_values
+              - values_below_13
               - relationships:
                   field: month
                   to: ref('dim_when_date')
