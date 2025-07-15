@@ -36,6 +36,9 @@ clean-targets:         # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro.
 
 models:
+  dbt_artifacts:
+    +database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_ICAROSPATH_DB"
+    +schema: dbt_artifacts
   my_new_project:
     +transient: false
     bronze: 
@@ -78,4 +81,5 @@ snapshots:
   +target_database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_ICAROSPATH_DB"
   +target_schema: snapshots
 
-      
+on-run-end:
+  - "{{ dbt_artifacts.upload_results(results) }}"
